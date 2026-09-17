@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<title>Бот для прокачек bib4ek</title>
+<title>Бот для прокачек viix999</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#0e0e10;--panel:#18181b;--accent:#9147ff;--accent-soft:rgba(145,70,255,.06);--text:#efeff1;--muted:#adadb8}
@@ -328,7 +328,7 @@ html.showing-winner body{overflow:hidden}
 </div>
   <div class="middle-hint" id="middleHint"></div>
   <div class="frame-wrap">
-  <iframe id="twitch-chat-frame" title="Twitch chat for bib4ek" loading="lazy" allow="clipboard-write"></iframe>
+  <iframe id="twitch-chat-frame" title="Twitch chat for viix999" loading="lazy" allow="clipboard-write"></iframe>
   <div class="chat-overlay" id="chatOverlay"></div>
 </div>
   <div class="leaderboard" style="display:none">
@@ -444,8 +444,8 @@ html.showing-winner body{overflow:hidden}
 
 <script>
 var CH='viix999';
-var code=localStorage.getItem('bib4ek_code')||'+';
-var parts=new Set(JSON.parse(localStorage.getItem('bib4ek_parts')||'[]'));
+var code=localStorage.getItem('viix999_code')||'+';
+var parts=new Set(JSON.parse(localStorage.getItem('viix999_parts')||'[]'));
 var sock=null;
 var timerSeconds=0,timerInterval=null,timerRunning=false;
 var MAX_DASH=2*Math.PI*56;
@@ -455,14 +455,14 @@ var passwordError=document.getElementById('passwordError');
 var CORRECT_PASSWORD='a1a1';
 
 // HOW MANY WINNERS TO PICK (used by future "choose winner" button)
-var winnersToPick=parseInt(localStorage.getItem('bib4ek_winners_pick'))||1;
+var winnersToPick=parseInt(localStorage.getItem('viix999_winners_pick'))||1;
 if(winnersToPick<1)winnersToPick=1;
 
 function getWinnersPick(){
   var inp=document.getElementById('winnersPick');
   var v=parseInt(inp&&inp.value)||1;
   if(v<1)v=1;
-  if(winnersToPick!==v){winnersToPick=v;localStorage.setItem('bib4ek_winners_pick',winnersToPick);}
+  if(winnersToPick!==v){winnersToPick=v;localStorage.setItem('viix999_winners_pick',winnersToPick);}
   return winnersToPick;
 }
 function saveWinnersPick(){getWinnersPick();}
@@ -480,7 +480,7 @@ var filterState={ALL:false,FM:false,GLOBAL:false};
 
 function loadFilters(){
   try{
-    var saved=JSON.parse(localStorage.getItem('bib4ek_filters')||'{}');
+    var saved=JSON.parse(localStorage.getItem('viix999_filters')||'{}');
     ['ALL','FM','GLOBAL'].forEach(function(k){
       filterState[k]=!!saved[k];
       var el=document.getElementById('f'+k);
@@ -493,7 +493,7 @@ function saveFilters(){
     var el=document.getElementById('f'+k);
     filterState[k]=el?!!el.checked:false;
   });
-  try{localStorage.setItem('bib4ek_filters',JSON.stringify(filterState));}catch(e){}
+  try{localStorage.setItem('viix999_filters',JSON.stringify(filterState));}catch(e){}
   renderParticipantsCount();
   updateMiddleHint();
 }
@@ -566,7 +566,7 @@ var selectedSpinMode='elimination';
 var currentWinner=null;
 var winnerResponded=false;
 var winnerMessages=[];
-var statistics=JSON.parse(localStorage.getItem('bib4ek_stats')||'[]');
+var statistics=JSON.parse(localStorage.getItem('viix999_stats')||'[]');
 var currentSession=null;
 var wheelColors=['#2a1a4a','#3d2466','#503080','#634099','#4a2a7a','#5c33a3','#6f3dcc','#8252f2','#9147ff','#772ce8'];
 
@@ -575,7 +575,7 @@ document.getElementById('winnersPick').value=winnersToPick;
 loadFilters();
 updateMiddleHint();
 
-function saveCode(){code=document.getElementById('code').value.trim()||'+';localStorage.setItem('bib4ek_code',code);updateMiddleHint();}
+function saveCode(){code=document.getElementById('code').value.trim()||'+';localStorage.setItem('viix999_code',code);updateMiddleHint();}
 function resetParts(){parts.clear();render();renderModal();renderParticipantsCount();}
 function confirmResetParts(){if(confirm('Сбросить всех участников?'))resetParts();}
 function openModal(){renderModal();document.getElementById('modal').classList.add('open');}
@@ -595,7 +595,7 @@ function updateMiddleHint(){
   }
 }
 document.getElementById('tb-list').onclick=function(e){if(e.target&&e.target.classList.contains('del'))removePart(e.target.getAttribute('data-n'));};
-function render(){var c=document.getElementById('cnt');if(c)c.textContent=parts.size;renderParticipantsCount();localStorage.setItem('bib4ek_parts',JSON.stringify(Array.from(parts)));}
+function render(){var c=document.getElementById('cnt');if(c)c.textContent=parts.size;renderParticipantsCount();localStorage.setItem('viix999_parts',JSON.stringify(Array.from(parts)));}
 function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 
 // LAST WINNERS LIST (under "choose winner" button)
@@ -818,7 +818,7 @@ function startQuickRoll(){if(parts.size===0){alert('Нет участников!
 
 // WINNER SCREEN VARIABLES (from eneeergyshow mechanics)
 var winTimerActive=false;
-var winnerHistory=JSON.parse(localStorage.getItem('bib4ek_winner_history')||'{}');
+var winnerHistory=JSON.parse(localStorage.getItem('viix999_winner_history')||'{}');
 var userMessages={};
 var rerollCount=0;
 
@@ -903,7 +903,7 @@ function saveWinnerResult(isReroll){
   var key=currentWinner.toLowerCase();
   if(!winnerHistory[key])winnerHistory[key]=[];
   winnerHistory[key].push({amount:0,deposit:0,tg:'',site:'---',date:new Date().toLocaleDateString('ru-RU')+' '+new Date().toLocaleTimeString('ru-RU'),isReroll:!!isReroll});
-  try{localStorage.setItem('bib4ek_winner_history',JSON.stringify(winnerHistory));}catch(e){}
+  try{localStorage.setItem('viix999_winner_history',JSON.stringify(winnerHistory));}catch(e){}
   renderLastWinners();
   renderLeaderboard();
 }
@@ -1087,4 +1087,4 @@ renderLastWinners();
 
 </script>
 </body>
-</html>s
+</html>
