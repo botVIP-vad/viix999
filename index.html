@@ -159,6 +159,65 @@ iframe{width:100%;height:100%;display:block;border:0;background:#000;opacity:0;p
 .twitch-tab.active{background:var(--accent);color:#0e0e10}
 .twitch-pane{display:flex;flex-direction:column;gap:4px}
 .twitch-status{color:var(--muted);font-size:11px;text-align:center;padding:6px 0;font-weight:700}
+.twp-status{display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:10px;background:rgba(145,70,255,.08);border:1px solid rgba(145,70,255,.2);font-size:12px;font-weight:700;margin-bottom:10px}
+.twp-status.online{background:rgba(74,222,128,.08);border-color:rgba(74,222,128,.3)}
+.twp-status img{width:26px;height:26px;border-radius:50%;border:2px solid var(--accent);object-fit:cover}
+.twp-form{display:grid;grid-template-columns:1.4fr .8fr auto;gap:8px}
+.twp-form input{padding:7px 10px;border-radius:8px;background:rgba(0,0,0,.22);border:1px solid rgba(145,70,255,.3);color:var(--text);font-size:12px;outline:none}
+.twp-form input:focus{border-color:var(--accent)}
+.twp-addbtn{background:#41c0a9;border:none;border-radius:8px;color:#04211c;font-weight:800;font-size:11px;cursor:pointer;padding:7px 14px;transition:.2s}
+.twp-addbtn:hover{background:#35a893}
+.twp-list{display:flex;flex-direction:column;gap:6px;max-height:220px;overflow-y:auto}
+.twp-row{display:flex;align-items:center;gap:8px;background:rgba(0,0,0,.2);border:1px solid rgba(145,70,255,.15);border-radius:10px;padding:6px 10px;font-size:12px}
+.twp-row .idx{width:22px;height:22px;border-radius:6px;background:rgba(145,70,255,.16);color:#bf94ff;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;flex-shrink:0}
+.twp-row .nick-input{flex:1;min-width:0;background:transparent;border:1px solid transparent;border-radius:6px;color:var(--text);font-weight:700;font-size:12px;padding:4px 6px;outline:none}
+.twp-row .nick-input:hover{border-color:rgba(145,70,255,.3)}
+.twp-row .nick-input:focus{border-color:var(--accent);background:rgba(0,0,0,.3)}
+.twp-row .points-input{width:80px;background:transparent;border:1px solid transparent;border-radius:6px;color:#41c0a9;font-weight:800;font-size:12px;padding:4px 6px;outline:none;text-align:right}
+.twp-row .points-input:hover{border-color:rgba(145,70,255,.3)}
+.twp-row .points-input:focus{border-color:var(--accent);background:rgba(0,0,0,.3)}
+.twp-row .del{background:none;border:none;color:var(--muted);cursor:pointer;font-size:16px;padding:2px 6px;border-radius:6px}
+.twp-row .del:hover{color:#f87171;background:rgba(246,100,108,.12)}
+.twp-bottom{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.twp-total{color:var(--muted);font-size:11px;font-weight:700;background:rgba(0,0,0,.22);border:1px solid rgba(145,70,255,.2);padding:5px 12px;border-radius:999px}
+.twp-clearbtn{background:rgba(0,0,0,.22);border:1px solid rgba(145,70,255,.25);color:var(--muted);cursor:pointer;font-weight:700;font-size:10px;padding:5px 10px;border-radius:8px;transition:.2s}
+.twp-clearbtn:hover{color:#f87171;border-color:rgba(246,100,108,.4);background:rgba(246,100,108,.1)}
+.twp-purchases{border:1px solid rgba(145,70,255,.2);border-radius:12px;padding:10px;background:rgba(0,0,0,.15)}
+.twp-purchases-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;gap:8px}
+.twp-purchases-head .twp-accept{background:#41c0a9;border:none;border-radius:7px;color:#04211c;font-weight:800;font-size:9px;padding:5px 8px;cursor:pointer;transition:.2s}
+.twp-purchases-head .twp-accept:hover{background:#35a893}
+.twp-purchase{display:flex;align-items:center;gap:8px;background:rgba(0,0,0,.2);border:1px solid rgba(145,70,255,.15);border-radius:10px;padding:6px 10px;font-size:11px}
+.twp-purchase .p-nick{font-weight:800;color:#bf94ff;flex-shrink:0}
+.twp-purchase .p-text{flex:1;min-width:0;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.twp-purchase .p-cost{font-weight:800;color:#41c0a9;flex-shrink:0}
+.twp-purchase .twp-accept{background:#41c0a9;border:none;border-radius:7px;color:#04211c;font-weight:800;font-size:9px;padding:5px 8px;cursor:pointer;flex-shrink:0;transition:.2s}
+.twp-purchase .twp-accept:hover{background:#35a893}
+.twp-purchase .twp-reject{background:none;border:1px solid rgba(145,70,255,.25);color:var(--muted);font-weight:700;font-size:9px;padding:5px 8px;border-radius:7px;cursor:pointer;flex-shrink:0;transition:.2s}
+.twp-purchase .twp-reject:hover{color:#f87171;border-color:rgba(246,100,108,.4);background:rgba(246,100,108,.1)}
+.twp-launch{margin-top:6px;background:linear-gradient(135deg,#8b5cf6,#7950f2 45%,#6d28d9);border:none;border-radius:12px;color:#fff;font-weight:800;font-size:13px;letter-spacing:1px;padding:13px;cursor:pointer;box-shadow:0 10px 26px -8px rgba(121,80,242,.85);transition:.2s;width:100%}
+.twp-launch:hover{transform:translateY(-2px);filter:brightness(1.06)}
+.welvol-overlay{position:fixed;inset:0;z-index:5000;display:none;background:rgba(10,10,12,.97);backdrop-filter:blur(12px)}
+.welvol-overlay.open{display:block}
+.welvol-overlay iframe{position:absolute;inset:24px 24px 24px 24px;width:calc(100% - 48px);height:calc(100% - 48px);border:2px solid rgba(145,70,255,.4);border-radius:16px;background:#0e0f12;opacity:1;pointer-events:auto}
+.welvol-close{position:absolute;top:34px;right:34px;z-index:10;width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.1);border:1px solid rgba(145,70,255,.4);color:#fff;font-size:20px;cursor:pointer;transition:.2s}
+.welvol-close:hover{background:#f87171;color:#fff;transform:scale(1.1)}
+.twp-overlay{position:fixed;inset:0;z-index:5000;display:none;flex-direction:column;align-items:center;justify-content:center;background:rgba(10,10,12,.94);backdrop-filter:blur(16px);padding:24px}
+.twp-overlay.open{display:flex}
+.twp-close{position:absolute;top:18px;right:22px;background:rgba(255,255,255,.08);border:1px solid rgba(145,70,255,.3);color:var(--text);width:42px;height:42px;border-radius:50%;font-size:20px;cursor:pointer;transition:.2s;display:flex;align-items:center;justify-content:center}
+.twp-close:hover{background:#f87171;color:#fff}
+.twp-screen{width:min(96vw,860px);max-height:calc(100vh - 48px);overflow-y:auto;background:var(--panel);border:2px solid rgba(145,70,255,.4);border-radius:20px;padding:24px;box-shadow:0 20px 60px rgba(0,0,0,.6)}
+.twp-screen::-webkit-scrollbar{width:6px}
+.twp-screen::-webkit-scrollbar-thumb{background:var(--accent);border-radius:8px}
+.twp-screen-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.twp-screen-head h2{margin:0;color:var(--accent);font-size:16px;font-weight:900;letter-spacing:2px;text-transform:uppercase}
+#twpScreenBody .twitch-pane{display:flex}
+#twpScreenBody .twp-list{max-height:340px}
+#twpScreenBody .twp-form input{padding:11px 14px;font-size:14px}
+#twpScreenBody .twp-addbtn{padding:11px 18px;font-size:13px}
+#twpScreenBody .twp-row{padding:9px 12px;font-size:14px}
+#twpScreenBody .twp-row .points-input{font-size:14px}
+#twpScreenBody .twp-purchase{font-size:13px;padding:9px 12px}
+#twpScreenBody .twp-purchase .twp-accept,#twpScreenBody .twp-purchase .twp-reject{font-size:11px;padding:7px 11px}
 .timer-wrapper{display:flex;flex-direction:column;align-items:center;gap:10px;margin-top:12px;padding-top:12px;border-top:1px solid rgba(145,70,255,.15)}
 .timer-container{position:relative;width:140px;height:140px;display:flex;justify-content:center;align-items:center}
 .timer-container svg{position:absolute;width:100%;height:100%;transform:rotate(-90deg)}
@@ -232,7 +291,8 @@ html.showing-winner{overflow:hidden}
 html.showing-winner body{overflow:hidden}
 .close-x{position:absolute;right:14px;top:6px;font-size:22px;color:var(--accent);cursor:pointer;transition:.3s;z-index:10}
 .close-x:hover{transform:scale(1.2);text-shadow:0 0 15px var(--accent)}
-.win-msg-count{position:absolute;right:14px;top:40px;color:var(--accent);font-weight:800;font-size:12px;letter-spacing:.5px;background:rgba(145,70,255,.08);border:1px solid rgba(145,70,255,.3);border-radius:10px;padding:4px 10px;pointer-events:none}
+.win-msg-count{color:var(--accent);font-weight:800;font-size:12px;letter-spacing:.5px;background:rgba(145,70,255,.08);border:1px solid rgba(145,70,255,.3);border-radius:10px;padding:4px 10px;pointer-events:none;text-align:center;margin-top:6px}
+.win-timer-col{display:flex;flex-direction:column;align-items:center;flex-shrink:0}
 .win-header-block{display:flex;justify-content:space-between;align-items:center;gap:14px;transition:.5s}
 .win-header-center{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
 #win-status-label{color:var(--accent);font-weight:800;letter-spacing:2px;font-size:11px;display:block;margin-bottom:2px;text-transform:uppercase}
@@ -331,69 +391,19 @@ html.showing-winner body{overflow:hidden}
   </label>
   <button class="winner-pick-btn" onclick="chooseWinners()">ВЫБРАТЬ ПОБЕДИТЕЛЯ</button>
   <button class="reset-parts-btn" onclick="confirmResetParts()">СБРОСИТЬ УЧАСТНИКОВ</button>
-  <button class="winner-pick-btn" style="background:rgba(145,70,255,.08);color:var(--accent);border:1px solid rgba(145,70,255,.3)" onclick="openLastWinners()">⭐ ПРОШЛЫЕ ПОБЕДИТЕЛИ РОЗЫГРЫШЕЙ</button>
-  <button class="winner-pick-btn" style="background:rgba(145,70,255,.12);color:#fff;border:1px solid rgba(145,70,255,.4)" onclick="openTwitchMenu()">🔴 TWITCH</button>
+  <button class="winner-pick-btn" style="background:rgba(145,70,255,.12);color:#fff;border:1px solid rgba(145,70,255,.4)" onclick="openWelvolScreen()">🔴 TWITCH</button>
   <div class="parts-count" onclick="openModal()">
     <span class="pc-label">Участников:</span>
     <span class="pc-num" id="partsCount">0</span>
   </div>
+  <button class="winner-pick-btn" style="background:rgba(145,70,255,.08);color:var(--accent);border:1px solid rgba(145,70,255,.3)" onclick="openLastWinners()">⭐ ПРОШЛЫЕ ПОБЕДИТЕЛИ РОЗЫГРЫШЕЙ</button>
 </div>
 
-<!-- TWITCH MENU MODAL -->
-<div class="modal" id="twitchMenuModal">
-  <div class="tablebox" style="width:520px">
-    <h3>🔴 TWITCH МЕНЮ</h3>
-    <div class="twitch-tabs">
-      <button class="twitch-tab active" id="tabBtnConnect" onclick="showTwitchTab('connect')">ПОДКЛЮЧЕНИЕ</button>
-      <button class="twitch-tab" id="tabBtnWheel" onclick="showTwitchTab('wheel')">РУЛЕТКА</button>
-      <button class="twitch-tab" id="tabBtnBuyers" onclick="showTwitchTab('buyers')">КУПИВШИЕ БАЛЛЫ</button>
-      <button class="twitch-tab" id="tabBtnTimer" onclick="showTwitchTab('timer')">ТАЙМЕР</button>
-    </div>
 
-    <div class="twitch-pane" id="paneConnect">
-      <div class="code-row" style="margin-bottom:8px"><label>КАНАЛ</label><input id="twitchChannelInput" placeholder="viix999"></div>
-      <div class="code-row" style="margin-bottom:8px"><label>КАНАЛ БАЛЛОВ</label><input id="twitchPointsChannel" placeholder="канал для канальных баллов"></div>
-      <button class="close" onclick="connectTwitchChannel()">ПОДКЛЮЧИТЬСЯ</button>
-      <div class="twitch-status" id="twitchStatus">Статус: ---</div>
-    </div>
-
-    <div class="twitch-pane" id="paneWheel" style="display:none">
-      <button class="close" onclick="openWheel()">🎡 ОТКРЫТЬ РУЛЕТКУ</button>
-      <button class="close" style="margin-top:8px" onclick="openWheelStats()">📊 СТАТИСТИКА РУЛЕТКИ</button>
-    </div>
-
-    <div class="twitch-pane" id="paneBuyers" style="display:none">
-      <div class="code-row" style="margin-bottom:8px"><label>НИК</label><input id="buyerNameInput" placeholder="ник купившего баллы"></div>
-      <button class="close" onclick="addPointBuyer()">ДОБАВИТЬ В СПИСОК</button>
-      <div class="tb-list" id="buyersList" style="max-height:200px;margin-top:8px"></div>
-    </div>
-
-    <div class="twitch-pane" id="paneTimer" style="display:none">
-      <div class="timer-wrapper" style="margin-top:0">
-        <div class="timer-container">
-          <svg><defs><linearGradient id="timerGradient" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#9147ff"/><stop offset="100%" stop-color="#bf94ff"/></linearGradient></defs>
-          <circle class="circle-bg" cx="70" cy="70" r="56"></circle>
-          <circle class="circle-progress" cx="70" cy="70" r="56" id="circleProgress"></circle></svg>
-          <div class="time-display">
-            <span class="time-numbers" id="timeDisplay">00:00</span>
-            <span class="time-label" id="timeLabel">Таймер</span>
-          </div>
-        </div>
-        <div class="timer-controls">
-          <div class="timer-row">
-            <button class="timer-btn" onclick="adjustTime(60)">+1</button>
-            <button class="timer-btn" onclick="adjustTime(-60)">-1</button>
-          </div>
-          <div class="timer-row">
-            <button class="timer-btn start-btn" id="btnStart" onclick="startTimer()">Старт</button>
-            <button class="timer-btn start-btn" id="btnPause" onclick="pauseTimer()">Пауза</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <button class="close" onclick="closeTwitchMenu()">Закрыть</button>
-  </div>
+<!-- WELVOL APP (полноэкранный встроенный сайт welvol.html) -->
+<div class="welvol-overlay" id="welvolOverlay">
+  <button class="welvol-close" onclick="closeWelvolScreen()" title="Закрыть">✕</button>
+  <iframe id="welvolFrame" src="about:blank" title="Twitch welvol"></iframe>
 </div>
 <!-- LAST WINNERS MODAL -->
 <div class="modal" id="lastWinnersModal">
@@ -476,14 +486,16 @@ html.showing-winner body{overflow:hidden}
 <div id="winner-screen" class="modal">
   <div class="modal-content winner-modal-content">
     <div class="close-x" onclick="closeWinnerScreen()">&times;</div>
-    <div id="win-msg-count" class="win-msg-count">Сообщений: 0</div>
     <div class="win-header-block">
       <div class="win-header-center">
         <img id="win-avatar" class="win-avatar" alt="" onerror="this.style.display='none'">
         <h2 id="win-nick">---</h2>
         <div id="reroll-counter-display">Рероллов: 0</div>
       </div>
-      <div id="win-timer-label">00:00:00</div>
+      <div class="win-timer-col">
+        <div id="win-timer-label">00:00:00</div>
+        <div id="win-msg-count" class="win-msg-count">Сообщений: 0</div>
+      </div>
     </div>
     <div class="win-grid">
       <div class="win-card">
@@ -749,6 +761,12 @@ function openTwitchMenu(){
   document.getElementById('twitchMenuModal').classList.add('open');
 }
 function closeTwitchMenu(){document.getElementById('twitchMenuModal').classList.remove('open');}
+function openWelvolScreen(){
+  var fr=document.getElementById('welvolFrame');
+  if(fr&&fr.getAttribute('src')==='about:blank'){fr.setAttribute('src','welvol.html');}
+  document.getElementById('welvolOverlay').classList.add('open');
+}
+function closeWelvolScreen(){document.getElementById('welvolOverlay').classList.remove('open');}
 function showTwitchTab(name){
   ['connect','wheel','buyers','timer'].forEach(function(t){
     var pane=document.getElementById('pane'+t.charAt(0).toUpperCase()+t.slice(1));
@@ -757,6 +775,7 @@ function showTwitchTab(name){
     if(btn)btn.classList.toggle('active',t===name);
   });
   if(name==='timer')displayTimer();
+  if(name==='points')twUpdatePointsUI();
 }
 function connectTwitchChannel(){
   var ch=document.getElementById('twitchChannelInput').value.trim();
@@ -795,6 +814,347 @@ function removePointBuyer(n){
   localStorage.setItem('viix999_point_buyers',JSON.stringify(Array.from(pointBuyers)));
   renderBuyers();
 }
+
+// ===== РОЗЫГРЫШ ПО БАЛЛАМ (Twitch Channel Points, как в welvol.html) =====
+var TWP_AUTH_KEY='viix999_twitch_auth';
+var TWP_PART_KEY='viix999_points_participants';
+var TWP_PURCH_KEY='viix999_points_purchases';
+var TWP_PROCESSED_KEY='viix999_points_processed';
+var TWITCH_API='https://api.twitch.tv/helix';
+var TWITCH_SCOPES='user:read:email channel:read:redemptions channel:manage:redemptions';
+var twAuth={accessToken:'',clientId:'',user:null};
+var twPointParticipants=[];
+var twPurchases=[];
+var twProcessedIds={};
+var twPollRewards=[];
+var twEsWs=null;
+var twEsSeen={};
+
+try{
+  var _ta=JSON.parse(localStorage.getItem(TWP_AUTH_KEY)||'{}');
+  if(_ta&&_ta.accessToken){twAuth.accessToken=_ta.accessToken;twAuth.clientId=_ta.clientId||'';twAuth.user=_ta.user||null;}
+  var _pp=JSON.parse(localStorage.getItem(TWP_PART_KEY)||'[]');
+  if(Array.isArray(_pp))twPointParticipants=_pp;
+  var _pu=JSON.parse(localStorage.getItem(TWP_PURCH_KEY)||'[]');
+  if(Array.isArray(_pu))twPurchases=_pu;
+  var _pr=JSON.parse(localStorage.getItem(TWP_PROCESSED_KEY)||'{}');
+  if(_pr&&typeof _pr==='object')twProcessedIds=_pr;
+}catch(e){}
+
+function twSaveAuth(){try{localStorage.setItem(TWP_AUTH_KEY,JSON.stringify(twAuth));}catch(e){}}
+function twSaveParts(){try{localStorage.setItem(TWP_PART_KEY,JSON.stringify(twPointParticipants));}catch(e){}}
+function twSavePurchases(){try{localStorage.setItem(TWP_PURCH_KEY,JSON.stringify(twPurchases));localStorage.setItem(TWP_PROCESSED_KEY,JSON.stringify(twProcessedIds));}catch(e){}}
+function twHeaders(){return{'Client-ID':twAuth.clientId,'Authorization':'Bearer '+twAuth.accessToken,'Content-Type':'application/json'};}
+function twIsAuthed(){return !!(twAuth.accessToken&&twAuth.clientId&&twAuth.user);}
+function twBroadcasterId(){return twAuth.user?twAuth.user.id:null;}
+
+(function(){
+  // Обработка возврата OAuth (#access_token=...)
+  var hash=window.location.hash;
+  if(hash&&hash.indexOf('access_token=')!==-1){
+    var params=new URLSearchParams(hash.substring(1));
+    var token=params.get('access_token');
+    if(token){
+      var cid=document.getElementById('twpClientId');
+      var cidVal=(cid&&cid.value.trim())||twAuth.clientId;
+      history.replaceState(null,null,window.location.pathname+window.location.search);
+      twAuth.accessToken=token;twAuth.clientId=cidVal;
+      twSaveAuth();
+      setTimeout(function(){twFetchUser();},50);
+    }
+  }
+})();
+
+function twPointsLogin(){
+  var cid=document.getElementById('twpClientId').value.trim();
+  if(!cid){alert('Вставь Client ID из dev.twitch.tv/console!');return;}
+  twAuth.clientId=cid;twSaveAuth();
+  var origin=window.location.origin;
+  if(!origin||origin==='null'||origin==='file://'){
+    document.getElementById('twpFileWarn').style.display='block';
+    return;
+  }
+  var redirectUri=origin+window.location.pathname;
+  window.location.href='https://id.twitch.tv/oauth2/authorize?client_id='+encodeURIComponent(cid)
+    +'&redirect_uri='+encodeURIComponent(redirectUri)+'&response_type=token&scope='+encodeURIComponent(TWITCH_SCOPES);
+}
+function twPointsLogout(){
+  twAuth={accessToken:'',clientId:'',user:null};twSaveAuth();
+  twPollRewards=[];twDisconnectEventSub();
+  twUpdatePointsUI();
+}
+function twFetchUser(){
+  fetch(TWITCH_API+'/users',{headers:{'Client-ID':twAuth.clientId,'Authorization':'Bearer '+twAuth.accessToken}})
+  .then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json();})
+  .then(function(d){
+    if(d.data&&d.data.length){twAuth.user=d.data[0];twSaveAuth();}
+    twUpdatePointsUI();twLoadRewards();
+  })
+  .catch(function(){twAuth.user=null;twUpdatePointsUI();});
+}
+function twUpdatePointsUI(){
+  var bar=document.getElementById('twpStatusBar');
+  var main=document.getElementById('twpMain');
+  var loginBtn=document.getElementById('twpLoginBtn');
+  var logoutBtn=document.getElementById('twpLogoutBtn');
+  var cidRow=document.getElementById('twpClientIdRow');
+  if(!bar)return;
+  if(twIsAuthed()){
+    bar.classList.add('online');
+    bar.innerHTML=(twAuth.user.profile_image_url?'<img src="'+twAuth.user.profile_image_url+'">':'🟢')
+      +'<span><strong>'+esc(twAuth.user.display_name)+'</strong> · @'+esc(twAuth.user.login)+'</span>';
+    main.style.display='flex';
+    loginBtn.style.display='none';
+    logoutBtn.style.display='block';
+    cidRow.style.display='none';
+    document.getElementById('twpRewardTitle').value=localStorage.getItem('viix999_reward_title')||'Участие в розыгрыше';
+    document.getElementById('twpRewardCost').value=localStorage.getItem('viix999_reward_cost')||'100';
+  }else{
+    bar.classList.remove('online');
+    bar.textContent='⚪ Не подключено';
+    main.style.display='none';
+    loginBtn.style.display='block';
+    logoutBtn.style.display='none';
+    cidRow.style.display='flex';
+    if(window.location.protocol==='file:'){document.getElementById('twpFileWarn').style.display='block';}
+  }
+  renderTwpPurchases();renderTwpParticipants();
+}
+function twLoadRewards(){
+  if(!twIsAuthed())return;
+  var bid=twBroadcasterId();
+  fetch(TWITCH_API+'/channel_points/custom_rewards?broadcaster_id='+bid,{headers:twHeaders()})
+  .then(function(r){return r.ok?r.json():r.json().then(function(j){throw new Error(j.message||('HTTP '+r.status));});})
+  .then(function(d){
+    twPollRewards=(d.data||[]).map(function(r){return{id:r.id,title:r.title,cost:r.cost};});
+    var info=document.getElementById('twpRewardInfo');
+    if(info){
+      info.textContent=twPollRewards.length
+        ?('Наград канала для опроса: '+twPollRewards.length)
+        :'Наград нет — создай награду ниже.';
+    }
+    twConnectEventSub();
+    twUpdatePollStatus();
+  })
+  .catch(function(err){var info=document.getElementById('twpRewardInfo');if(info)info.textContent='Ошибка загрузки наград: '+(err.message||err);});
+}
+function twCreateReward(){
+  if(!twIsAuthed())return;
+  var title=document.getElementById('twpRewardTitle').value.trim()||'Участие в розыгрыше';
+  var cost=parseInt(document.getElementById('twpRewardCost').value,10)||100;
+  localStorage.setItem('viix999_reward_title',title);localStorage.setItem('viix999_reward_cost',cost);
+  var bid=twBroadcasterId();
+  var existing=null;
+  for(var i=0;i<twPollRewards.length;i++){if(twPollRewards[i].title===title){existing=twPollRewards[i];break;}}
+  var url=TWITCH_API+'/channel_points/custom_rewards?broadcaster_id='+bid+(existing?'&id='+existing.id:'');
+  fetch(url,{method:existing?'PATCH':'POST',headers:twHeaders(),body:JSON.stringify({title:title,cost:cost,is_enabled:true})})
+  .then(function(r){return r.json().then(function(j){return{ok:r.ok,j:j};});})
+  .then(function(res){
+    var info=document.getElementById('twpRewardInfo');
+    if(res.ok&&res.j.data&&res.j.data.length){
+      info.textContent='✓ Награда «'+title+'» за '+cost+' баллов готова. Покупай её в канале — участники появятся в списке.';
+      twLoadRewards();
+    }else{
+      info.textContent='❌ '+(res.j.message||'Ошибка. Нужны права channel:manage:redemptions и статус Partner/Affiliate.');
+    }
+  })
+  .catch(function(e){document.getElementById('twpRewardInfo').textContent='❌ Ошибка сети: '+(e.message||e);});
+}
+function twUpdatePollStatus(){
+  var el=document.getElementById('twpPollStatus');
+  if(el)el.textContent=twIsAuthed()?('Опрос выкупов: '+twPollRewards.length+' наград · покупок в очереди: '+twPurchases.length):'';
+}
+// EventSub WebSocket — мгновенные покупки
+function twConnectEventSub(){
+  if(!twIsAuthed())return;
+  if(twEsWs&&(twEsWs.readyState===WebSocket.OPEN||twEsWs.readyState===WebSocket.CONNECTING))return;
+  twEsWs=new WebSocket('wss://eventsub.wss.twitch.tv/ws');
+  twEsWs.onmessage=function(e){
+    var msg;try{msg=JSON.parse(e.data);}catch(err){return;}
+    var type=msg.metadata&&msg.metadata.message_type;
+    if(type==='session_welcome'){
+      var sid=msg.payload&&msg.payload.session&&msg.payload.session.id;
+      if(sid)twEsSubscribe(sid);
+    }else if(type==='notification'){
+      var sub=msg.payload.subscription||{};
+      if(sub.type==='channel.channel_points_custom_reward_redemption.add'){
+        var mid=msg.metadata.message_id;
+        if(twEsSeen[mid])return;twEsSeen[mid]=true;
+        twAddPurchase(msg.payload.event);
+      }
+    }
+  };
+  twEsWs.onclose=function(){twEsWs=null;if(twIsAuthed())setTimeout(twConnectEventSub,3000);};
+}
+function twDisconnectEventSub(){if(twEsWs){try{twEsWs.close();}catch(e){}twEsWs=null;}}
+function twEsSubscribe(sessionId){
+  fetch(TWITCH_API+'/eventsub/subscriptions',{method:'POST',headers:twHeaders(),body:JSON.stringify({
+    type:'channel.channel_points_custom_reward_redemption.add',version:'1',
+    condition:{broadcaster_user_id:twBroadcasterId()},
+    transport:{method:'websocket',session_id:sessionId}
+  })}).catch(function(){});
+}
+function twAddPurchase(ev){
+  if(!ev||!ev.id||twProcessedIds[ev.id])return;
+  twProcessedIds[ev.id]=true;
+  twPurchases.push({
+    nick:ev.user_name||ev.user_login||'?',
+    text:ev.user_input||'',
+    cost:(ev.reward&&ev.reward.cost)||ev.cost||0,
+    reward:ev.reward_title||(ev.reward&&ev.reward.title)||'',
+    redemptionId:ev.id,rewardId:ev.reward_id
+  });
+  twSavePurchases();renderTwpPurchases();twUpdatePollStatus();
+}
+function twFulfill(p,status){
+  if(!twIsAuthed()||!p.rewardId||!p.redemptionId)return;
+  fetch(TWITCH_API+'/channel_points/custom_rewards_redemptions?broadcaster_id='+twBroadcasterId()
+    +'&reward_id='+p.rewardId+'&id='+p.redemptionId,{method:'PATCH',headers:twHeaders(),body:JSON.stringify({status:status})}).catch(function(){});
+}
+function twAcceptPurchase(i){
+  var p=twPurchases[i];if(!p)return;
+  var low=p.nick.toLowerCase(),found=null;
+  for(var j=0;j<twPointParticipants.length;j++){
+    if(twPointParticipants[j].nick.toLowerCase()===low){found=twPointParticipants[j];break;}
+  }
+  if(found)found.points=(found.points||0)+(p.cost||0);
+  else twPointParticipants.push({nick:p.nick,points:p.cost||0});
+  twSaveParts();twPurchases.splice(i,1);twSavePurchases();
+  renderTwpParticipants();renderTwpPurchases();
+  twFulfill(p,'FULFILLED');
+}
+function twRejectPurchase(i){
+  var p=twPurchases[i];if(!p)return;
+  twPurchases.splice(i,1);twSavePurchases();renderTwpPurchases();
+  twFulfill(p,'CANCELED');
+}
+function twSumAllPurchases(){
+  if(!twPurchases.length)return;
+  var batch=twPurchases.slice();
+  batch.forEach(function(p){
+    var low=p.nick.toLowerCase(),found=null;
+    for(var j=0;j<twPointParticipants.length;j++){
+      if(twPointParticipants[j].nick.toLowerCase()===low){found=twPointParticipants[j];break;}
+    }
+    if(found)found.points=(found.points||0)+(p.cost||0);
+    else twPointParticipants.push({nick:p.nick,points:p.cost||0});
+    twFulfill(p,'FULFILLED');
+  });
+  twPurchases=[];twSaveParts();twSavePurchases();
+  renderTwpParticipants();renderTwpPurchases();
+}
+function renderTwpPurchases(){
+  var l=document.getElementById('twpPurchasesList');
+  if(!l)return;
+  l.innerHTML=twPurchases.map(function(p,i){
+    return'<div class="twp-purchase">'
+      +'<span class="p-nick">'+esc(p.nick)+'</span>'
+      +(p.reward?'<span class="p-text" title="'+esc(p.reward)+'">'+esc(p.reward)+'</span>':'')
+      +(p.text?'<span class="p-text" title="'+esc(p.text)+'">'+esc(p.text)+'</span>':'')
+      +'<span class="p-cost">🪙 '+(p.cost||0)+'</span>'
+      +'<button class="twp-accept" title="Прибавить баллы к существующему участнику (или добавить нового)" onclick="twSumPurchase('+i+')">СУММИРОВАТЬ</button>'
+      +'<button class="twp-accept" title="Добавить отдельным участником" onclick="twAcceptPurchase('+i+')">ОТДЕЛЬНО</button>'
+      +'<button class="twp-reject" title="Отклонить и вернуть баллы" onclick="twRejectPurchase('+i+')">ОТКЛОНИТЬ</button>'
+      +'</div>';
+  }).join('')||'<div style="color:var(--muted);text-align:center;padding:10px;font-size:11px">Пока никто не купил награду</div>';
+}
+function twAddPointParticipant(){
+  var n=document.getElementById('twpNickInput').value.trim();
+  var p=parseInt(document.getElementById('twpPointsInput').value,10);
+  if(!n)return;
+  if(isNaN(p)||p<0)p=0;
+  var low=n.toLowerCase(),found=null;
+  for(var j=0;j<twPointParticipants.length;j++){
+    if(twPointParticipants[j].nick.toLowerCase()===low){found=twPointParticipants[j];break;}
+  }
+  if(found)found.points=(found.points||0)+p;
+  else twPointParticipants.push({nick:n,points:p});
+  twSaveParts();
+  document.getElementById('twpNickInput').value='';
+  document.getElementById('twpPointsInput').value='';
+  document.getElementById('twpNickInput').focus();
+  renderTwpParticipants();
+}
+function twTotalPoints(){return twPointParticipants.reduce(function(a,p){return a+(p.points||0);},0);}
+function renderTwpParticipants(){
+  var l=document.getElementById('twpParticipantsList');
+  if(!l)return;
+  var badge=document.getElementById('twpTotalBadge');
+  if(badge)badge.textContent='Участников: '+twPointParticipants.length+' · баллов: '+twTotalPoints();
+  l.innerHTML=twPointParticipants.map(function(p,i){
+    return'<div class="twp-row">'
+      +'<div class="idx">'+(i+1)+'</div>'
+      +'<input class="nick-input" value="'+String(p.nick).replace(/"/g,'&quot;')+'" title="Ник (можно редактировать)" onchange="twUpdateParticipant('+i+',this.value,null)">'
+      +'<input class="points-input" type="number" min="0" value="'+(p.points||0)+'" title="Баллы (можно редактировать)" onchange="twUpdateParticipant('+i+',null,this.value)">'
+      +'<button class="del" title="Удалить" onclick="twRemovePointParticipant('+i+')">&times;</button>'
+      +'</div>';
+  }).join('')||'<div style="color:var(--muted);text-align:center;padding:14px;font-size:11px;border:1px dashed rgba(145,70,255,.3);border-radius:10px">Список пуст. Добавь первого участника выше ☝</div>';
+}
+function twUpdateParticipant(i,newNick,newPoints){
+  var p=twPointParticipants[i];
+  if(!p)return;
+  if(newNick!==null&&newNick!==undefined){
+    var nick=String(newNick).trim();
+    if(nick)p.nick=nick;
+  }
+  if(newPoints!==null&&newPoints!==undefined){
+    var pts=parseInt(newPoints,10);
+    p.points=isNaN(pts)||pts<0?0:pts;
+  }
+  twSaveParts();renderTwpParticipants();
+}
+function twClearParticipants(){
+  if(!confirm('Очистить весь список участников по баллам?'))return;
+  twPointParticipants=[];twSaveParts();renderTwpParticipants();
+}
+function twClearPurchases(){
+  twPurchases=[];twSavePurchases();renderTwpPurchases();
+}
+function twSumPurchase(i){
+  var p=twPurchases[i];if(!p)return;
+  var low=p.nick.toLowerCase(),found=null;
+  for(var j=0;j<twPointParticipants.length;j++){
+    if(twPointParticipants[j].nick.toLowerCase()===low){found=twPointParticipants[j];break;}
+  }
+  if(found)found.points=(found.points||0)+(p.cost||0);
+  else twPointParticipants.push({nick:p.nick,points:p.cost||0});
+  twSaveParts();twPurchases.splice(i,1);twSavePurchases();
+  renderTwpParticipants();renderTwpPurchases();
+  twFulfill(p,'FULFILLED');
+}
+function twRemovePointParticipant(i){twPointParticipants.splice(i,1);twSaveParts();renderTwpParticipants();}
+function twPickPointsWinner(){
+  var list=twPointParticipants.filter(function(p){return(p.points||0)>0;});
+  if(!list.length){alert('Нет участников с баллами!');return;}
+  var total=list.reduce(function(a,p){return a+(p.points||0);},0);
+  var roll=Math.random()*total,acc=0,winner=list[0];
+  for(var i=0;i<list.length;i++){acc+=list[i].points||0;if(roll<acc){winner=list[i];break;}}
+  parts.add(winner.nick);render();
+  var chance=Math.round((winner.points||0)/total*1000)/10;
+  alert('Победитель: '+winner.nick+'\nБаллов: '+winner.points+'\nШанс был: '+chance+'%');
+  showWinner(winner.nick);
+}
+// Опрос выкупов каждые 5 секунд (резерв к EventSub)
+setInterval(function(){
+  if(!twIsAuthed()||!twPollRewards.length)return;
+  var bid=twBroadcasterId();
+  twPollRewards.forEach(function(r){
+    fetch(TWITCH_API+'/channel_points/custom_rewards_redemptions?broadcaster_id='+bid+'&reward_id='+r.id+'&status=UNFULFILLED&first=20',{headers:twHeaders()})
+    .then(function(res){return res.ok?res.json():null;})
+    .then(function(d){
+      if(!d||!d.data)return;
+      var changed=false;
+      d.data.forEach(function(rd){
+        if(twProcessedIds[rd.id])return;
+        twProcessedIds[rd.id]=true;changed=true;
+        twPurchases.push({nick:rd.user_name||rd.user_login||'?',text:rd.user_input||'',cost:rd.cost||r.cost||0,reward:r.title||'',redemptionId:rd.id,rewardId:r.id});
+      });
+      if(changed){twSavePurchases();renderTwpPurchases();twUpdatePollStatus();}
+    }).catch(function(){});
+  });
+},5000);
+// Если уже есть токен — подтянуть пользователя при загрузке
+if(twAuth.accessToken){twFetchUser();}
 
 // LEADERBOARD RENDERER
 function renderLeaderboard(){
@@ -1035,7 +1395,16 @@ function showWinner(name){
   currentSession={winner:name.toUpperCase(),date:new Date().toLocaleDateString('ru-RU'),startTime:Date.now(),messages:[]};
 }
 
-function updateWinMsgCount(){var el=document.getElementById('win-msg-count');if(el)el.textContent='Сообщений: '+winnerMessages.length;}
+function updateWinMsgCount(){
+  var el=document.getElementById('win-msg-count');
+  if(!el)return;
+  var n=0;
+  if(currentWinner){
+    var w=currentWinner.toLowerCase();
+    winnerMessages.forEach(function(m){if(m.user&&m.user.toLowerCase()===w)n++;});
+  }
+  el.textContent='Сообщений: '+n;
+}
 
 function winnerCooldownInfo(name){
   var h=winnerHistory[name.toLowerCase()]||[];
@@ -1134,7 +1503,7 @@ function closeModals(){
   clearInterval(window.winInt);
 }
 
-document.addEventListener('keydown',function(e){if(e.key==='Escape'){closeModals();closeWheel();}});
+document.addEventListener('keydown',function(e){if(e.key==='Escape'){closeModals();closeWheel();var wo=document.getElementById('welvolOverlay');if(wo&&wo.classList.contains('open'))closeWelvolScreen();}});
 
 // ===== TWITCH BADGES (per IRC tags docs: badges=broadcaster/1,subscriber/12,...) =====
 // Иконки берём напрямую с CDN Twitch по известным UUID глобальных бейджей
