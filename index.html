@@ -53,6 +53,7 @@ html,body{margin:0;height:100%;padding:0;background:#0e0e10;color:var(--text);fo
 .middle-hint{position:fixed;top:110px;bottom:22px;left:384px;right:calc(50vw + 22px);z-index:10;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;text-align:center;pointer-events:none;background:rgba(14,14,16,.82);backdrop-filter:blur(10px);border:2px solid rgba(145,70,255,.5);border-radius:16px;padding:26px 30px;box-shadow:0 10px 40px rgba(0,0,0,.55),0 0 30px rgba(145,70,255,.2)}
 .middle-hint span.hint-main{font-size:18px;font-weight:800;color:#efeff1;line-height:1.5}
 .middle-hint span.hint-code{font-size:22px;font-weight:800;color:var(--accent);text-shadow:0 0 20px rgba(145,70,255,.4);letter-spacing:2px}
+.middle-hint span.hint-filter{font-size:12px;font-weight:700;color:#adadb8;letter-spacing:.5px}
 .pick-btn:hover{background:rgba(145,70,255,.15);border-color:var(--accent)}
 #winnersPick{width:52px;padding:5px;border-radius:8px;background:rgba(0,0,0,.22);color:var(--accent);font-size:18px;font-weight:900;text-align:center;outline:none;transition:.2s;border:1px solid rgba(145,70,255,.3);-moz-appearance:textfield}
 #winnersPick::-webkit-inner-spin-button,#winnersPick::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
@@ -69,7 +70,7 @@ html,body{margin:0;height:100%;padding:0;background:#0e0e10;color:var(--text);fo
 .pbtn:hover{background:rgba(145,70,255,.15);border-color:var(--accent)}
 .reset{width:100%;padding:9px;border-radius:10px;background:transparent;color:var(--accent);font-weight:700;font-size:12px;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:.2s;border:1px solid rgba(145,70,255,.3)}
 .reset:hover{background:rgba(145,70,255,.15);border-color:var(--accent)}
-.frame-wrap{width:50vw;min-width:0;height:100vh;margin-left:auto;border-radius:16px;overflow:hidden;background:rgba(22,38,29,.25);backdrop-filter:blur(10px);box-shadow:0 10px 34px rgba(0,0,0,.35),0 0 0 2px rgba(145,70,255,.3),0 0 20px rgba(145,70,255,.15);border:2px solid rgba(145,70,255,.4);position:relative}
+.frame-wrap{width:calc(50vw - 22px);min-width:0;height:calc(100vh - 132px);margin:110px 22px 22px auto;border-radius:16px;overflow:hidden;background:rgba(22,38,29,.25);backdrop-filter:blur(10px);box-shadow:0 10px 34px rgba(0,0,0,.35),0 0 0 2px rgba(145,70,255,.3),0 0 20px rgba(145,70,255,.15);border:2px solid rgba(145,70,255,.4);position:relative}
 .leaderboard{width:280px;min-height:170px;display:flex;flex-direction:column;gap:8px;background:rgba(22,38,29,.3);backdrop-filter:blur(10px);border:1px solid rgba(145,70,255,.2);border-radius:16px;padding:16px;box-shadow:0 10px 34px rgba(0,0,0,.35)}
 .leaderboard h3{margin:0 0 8px;color:var(--accent);font-size:12px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;text-align:center}
 .leaderboard-list{flex:1;overflow-y:auto;max-height:360px;display:flex;flex-direction:column;gap:4px}
@@ -104,8 +105,8 @@ html,body{margin:0;height:100%;padding:0;background:#0e0e10;color:var(--text);fo
 .password-error{color:#f87171;font-size:12px;text-align:center;min-height:18px;font-weight:600}
 .password-hint{color:var(--muted);font-size:10px;text-align:center;margin-top:-8px}
 .frame-wrap::before{content:'';position:absolute;inset:0;border-radius:16px;padding:2px;background:linear-gradient(135deg,rgba(145,70,255,.5),transparent,rgba(145,70,255,.2));-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none}
-iframe{width:100%;height:100%;display:block;border:0;background:#0e0e10;opacity:0;pointer-events:none}
-.chat-overlay{position:absolute;top:0;left:0;right:0;bottom:0;display:flex;flex-direction:column;justify-content:flex-end;padding:10px;overflow-y:scroll;font-size:13px;line-height:1.5;background:rgba(10,21,16,.5);z-index:5}
+iframe{width:100%;height:100%;display:block;border:0;background:#000;opacity:0;pointer-events:none}
+.chat-overlay{position:absolute;top:0;left:0;right:0;bottom:0;display:flex;flex-direction:column;justify-content:flex-end;padding:10px;overflow-y:scroll;font-size:13px;line-height:1.5;background:#000;z-index:5}
 .chat-overlay::-webkit-scrollbar{width:6px}
 .chat-overlay::-webkit-scrollbar-thumb{background:var(--accent);border-radius:8px}
 .chat-overlay::-webkit-scrollbar-track{background:rgba(145,70,255,.08);border-radius:8px}
@@ -135,7 +136,7 @@ iframe{width:100%;height:100%;display:block;border:0;background:#0e0e10;opacity:
 .chat-msg.highlight{background:rgba(145,70,255,.08);border-left:3px solid var(--accent);border-radius:6px}
 .modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);align-items:flex-start;justify-content:center;z-index:1000}
 .modal.open{display:flex}
-#winner-screen.modal{align-items:stretch}
+#winner-screen.modal{align-items:center;justify-content:center}
 #winner-screen .modal-content{max-height:none;display:flex;width:620px;max-width:100vw}
 .tablebox{width:500px;max-width:92vw;max-height:80vh;background:var(--panel);border-radius:16px;padding:18px;box-shadow:0 14px 40px rgba(0,0,0,.55);display:flex;flex-direction:column;gap:12px}
 .tablebox h3{margin:0;color:var(--accent);font-size:14px;letter-spacing:1.5px;text-transform:uppercase;text-align:center}
@@ -152,6 +153,12 @@ iframe{width:100%;height:100%;display:block;border:0;background:#0e0e10;opacity:
 .del:hover{background:#f87171;color:#fff}
 .close{width:100%;padding:9px;border-radius:10px;background:var(--accent-soft);color:var(--accent);font-weight:700;font-size:12px;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:.2s;border:none}
 .close:hover{background:var(--accent);color:#0e0e10}
+.twitch-tabs{display:flex;gap:6px}
+.twitch-tab{flex:1;padding:8px 4px;border-radius:8px;background:rgba(145,70,255,.08);color:var(--accent);font-weight:700;font-size:10px;letter-spacing:.5px;cursor:pointer;transition:.2s;border:1px solid rgba(145,70,255,.3);text-transform:uppercase}
+.twitch-tab:hover{background:rgba(145,70,255,.2)}
+.twitch-tab.active{background:var(--accent);color:#0e0e10}
+.twitch-pane{display:flex;flex-direction:column;gap:4px}
+.twitch-status{color:var(--muted);font-size:11px;text-align:center;padding:6px 0;font-weight:700}
 .timer-wrapper{display:flex;flex-direction:column;align-items:center;gap:10px;margin-top:12px;padding-top:12px;border-top:1px solid rgba(145,70,255,.15)}
 .timer-container{position:relative;width:140px;height:140px;display:flex;justify-content:center;align-items:center}
 .timer-container svg{position:absolute;width:100%;height:100%;transform:rotate(-90deg)}
@@ -220,11 +227,12 @@ iframe{width:100%;height:100%;display:block;border:0;background:#0e0e10;opacity:
 .stat-item .time{color:var(--text);font-size:12px}
 
 /* WINNER SCREEN MODAL STYLES */
-.winner-modal-content{flex-direction:column;width:620px;height:100vh;max-height:none;border-radius:0;background:var(--bg);padding:16px;border:none;box-shadow:none}
+.winner-modal-content{flex-direction:column;width:620px;height:calc(100vh - 110px);max-height:none;border-radius:16px;background:var(--bg);padding:16px;border:2px solid rgba(145,70,255,.4);box-shadow:0 10px 40px rgba(0,0,0,.55);position:relative}
 html.showing-winner{overflow:hidden}
 html.showing-winner body{overflow:hidden}
 .close-x{position:absolute;right:14px;top:6px;font-size:22px;color:var(--accent);cursor:pointer;transition:.3s;z-index:10}
 .close-x:hover{transform:scale(1.2);text-shadow:0 0 15px var(--accent)}
+.win-msg-count{position:absolute;right:14px;top:40px;color:var(--accent);font-weight:800;font-size:12px;letter-spacing:.5px;background:rgba(145,70,255,.08);border:1px solid rgba(145,70,255,.3);border-radius:10px;padding:4px 10px;pointer-events:none}
 .win-header-block{display:flex;justify-content:space-between;align-items:center;gap:14px;transition:.5s}
 .win-header-center{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
 #win-status-label{color:var(--accent);font-weight:800;letter-spacing:2px;font-size:11px;display:block;margin-bottom:2px;text-transform:uppercase}
@@ -286,7 +294,7 @@ html.showing-winner body{overflow:hidden}
 <div class="topbar">
   <div class="topbar-item">
     <label>КОД</label>
-    <input id="code" value="+" oninput="saveCode()">
+    <input id="code" value="" oninput="saveCode()">
   </div>
   <div class="topbar-item">
     <label>ПОБЕДИТЕЛИ</label>
@@ -294,6 +302,14 @@ html.showing-winner body{overflow:hidden}
       <button class="pick-btn" onclick="adjustWinners(-1)">−</button>
       <input type="number" id="winnersPick" value="1" min="1" oninput="saveWinnersPick()">
       <button class="pick-btn" onclick="adjustWinners(1)">+</button>
+    </div>
+  </div>
+  <div class="topbar-item">
+    <label>СООБЩЕНИЙ</label>
+    <div class="topbar-count-row">
+      <button class="pick-btn" onclick="adjustMinMsgs(-1)">−</button>
+      <input type="number" id="minMsgs" value="1" min="1" oninput="saveMinMsgs()">
+      <button class="pick-btn" onclick="adjustMinMsgs(1)">+</button>
     </div>
   </div>
 </div>
@@ -311,19 +327,81 @@ html.showing-winner body{overflow:hidden}
   <label class="filter-row switch-row">
     <input type="checkbox" id="fGLOBAL" onchange="saveFilters()"><span class="cbox"></span>
     <span class="filter-tag-txt">GLOBAL</span>
-    <span class="filter-desc">Только те, кто никогда не побеждал. Рерольнутые и прошедшие батл могут.</span>
+    <span class="filter-desc">Только те, кто никогда не побеждал. Рерольнутые могут.</span>
   </label>
   <button class="winner-pick-btn" onclick="chooseWinners()">ВЫБРАТЬ ПОБЕДИТЕЛЯ</button>
   <button class="reset-parts-btn" onclick="confirmResetParts()">СБРОСИТЬ УЧАСТНИКОВ</button>
+  <button class="winner-pick-btn" style="background:rgba(145,70,255,.08);color:var(--accent);border:1px solid rgba(145,70,255,.3)" onclick="openLastWinners()">⭐ ПРОШЛЫЕ ПОБЕДИТЕЛИ РОЗЫГРЫШЕЙ</button>
+  <button class="winner-pick-btn" style="background:rgba(145,70,255,.12);color:#fff;border:1px solid rgba(145,70,255,.4)" onclick="openTwitchMenu()">🔴 TWITCH</button>
   <div class="parts-count" onclick="openModal()">
     <span class="pc-label">Участников:</span>
     <span class="pc-num" id="partsCount">0</span>
   </div>
 </div>
 
-<div class="last-winners">
-  <h4>⭐ Прошлые победители розыгрышей</h4>
-  <div class="last-winners-list" id="lastWinnersList"></div>
+<!-- TWITCH MENU MODAL -->
+<div class="modal" id="twitchMenuModal">
+  <div class="tablebox" style="width:520px">
+    <h3>🔴 TWITCH МЕНЮ</h3>
+    <div class="twitch-tabs">
+      <button class="twitch-tab active" id="tabBtnConnect" onclick="showTwitchTab('connect')">ПОДКЛЮЧЕНИЕ</button>
+      <button class="twitch-tab" id="tabBtnWheel" onclick="showTwitchTab('wheel')">РУЛЕТКА</button>
+      <button class="twitch-tab" id="tabBtnBuyers" onclick="showTwitchTab('buyers')">КУПИВШИЕ БАЛЛЫ</button>
+      <button class="twitch-tab" id="tabBtnTimer" onclick="showTwitchTab('timer')">ТАЙМЕР</button>
+    </div>
+
+    <div class="twitch-pane" id="paneConnect">
+      <div class="code-row" style="margin-bottom:8px"><label>КАНАЛ</label><input id="twitchChannelInput" placeholder="viix999"></div>
+      <div class="code-row" style="margin-bottom:8px"><label>КАНАЛ БАЛЛОВ</label><input id="twitchPointsChannel" placeholder="канал для канальных баллов"></div>
+      <button class="close" onclick="connectTwitchChannel()">ПОДКЛЮЧИТЬСЯ</button>
+      <div class="twitch-status" id="twitchStatus">Статус: ---</div>
+    </div>
+
+    <div class="twitch-pane" id="paneWheel" style="display:none">
+      <button class="close" onclick="openWheel()">🎡 ОТКРЫТЬ РУЛЕТКУ</button>
+      <button class="close" style="margin-top:8px" onclick="openWheelStats()">📊 СТАТИСТИКА РУЛЕТКИ</button>
+    </div>
+
+    <div class="twitch-pane" id="paneBuyers" style="display:none">
+      <div class="code-row" style="margin-bottom:8px"><label>НИК</label><input id="buyerNameInput" placeholder="ник купившего баллы"></div>
+      <button class="close" onclick="addPointBuyer()">ДОБАВИТЬ В СПИСОК</button>
+      <div class="tb-list" id="buyersList" style="max-height:200px;margin-top:8px"></div>
+    </div>
+
+    <div class="twitch-pane" id="paneTimer" style="display:none">
+      <div class="timer-wrapper" style="margin-top:0">
+        <div class="timer-container">
+          <svg><defs><linearGradient id="timerGradient" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#9147ff"/><stop offset="100%" stop-color="#bf94ff"/></linearGradient></defs>
+          <circle class="circle-bg" cx="70" cy="70" r="56"></circle>
+          <circle class="circle-progress" cx="70" cy="70" r="56" id="circleProgress"></circle></svg>
+          <div class="time-display">
+            <span class="time-numbers" id="timeDisplay">00:00</span>
+            <span class="time-label" id="timeLabel">Таймер</span>
+          </div>
+        </div>
+        <div class="timer-controls">
+          <div class="timer-row">
+            <button class="timer-btn" onclick="adjustTime(60)">+1</button>
+            <button class="timer-btn" onclick="adjustTime(-60)">-1</button>
+          </div>
+          <div class="timer-row">
+            <button class="timer-btn start-btn" id="btnStart" onclick="startTimer()">Старт</button>
+            <button class="timer-btn start-btn" id="btnPause" onclick="pauseTimer()">Пауза</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <button class="close" onclick="closeTwitchMenu()">Закрыть</button>
+  </div>
+</div>
+<!-- LAST WINNERS MODAL -->
+<div class="modal" id="lastWinnersModal">
+  <div class="tablebox" style="width:420px">
+    <h3>⭐ ПРОШЛЫЕ ПОБЕДИТЕЛИ</h3>
+    <div class="last-winners-list" id="lastWinnersList" style="max-height:60vh"></div>
+    <button class="close" onclick="closeLastWinners()">Закрыть</button>
+  </div>
 </div>
 </div>
   <div class="middle-hint" id="middleHint"></div>
@@ -398,6 +476,7 @@ html.showing-winner body{overflow:hidden}
 <div id="winner-screen" class="modal">
   <div class="modal-content winner-modal-content">
     <div class="close-x" onclick="closeWinnerScreen()">&times;</div>
+    <div id="win-msg-count" class="win-msg-count">Сообщений: 0</div>
     <div class="win-header-block">
       <div class="win-header-center">
         <img id="win-avatar" class="win-avatar" alt="" onerror="this.style.display='none'">
@@ -415,6 +494,21 @@ html.showing-winner body{overflow:hidden}
         <h4>История игрока (Global):</h4>
         <div id="win-drop-history"></div>
       </div>
+    </div>
+    <div id="win-form-panel" class="win-form" style="display:none">
+      <h3>Данные победителя</h3>
+      <input type="number" id="win-deposit-input" placeholder="Сумма депозита (RUB)">
+      <input type="number" id="win-amount-input" placeholder="Сумма вывода (RUB)">
+      <input type="text" id="win-tg-input" placeholder="Telegram @username">
+      <select id="win-site-input">
+        <option value="---">Сайт</option>
+        <option value="MagicDrop">MagicDrop</option>
+        <option value="DastSkin">DastSkin</option>
+        <option value="VirusDrop">VirusDrop</option>
+        <option value="PokeDrop">PokeDrop</option>
+      </select>
+      <button class="pbtn" onclick="saveWinnerStats()">СОХРАНИТЬ ДАННЫЕ</button>
+      <button class="reset" onclick="finishCloseWinner()">ПРОПУСТИТЬ</button>
     </div>
     <div class="win-actions">
       <button class="reset" onclick="closeWinnerScreen()">ЗАКРЫТЬ</button>
@@ -444,7 +538,7 @@ html.showing-winner body{overflow:hidden}
 
 <script>
 var CH='viix999';
-var code=localStorage.getItem('viix999_code')||'+';
+var code=localStorage.getItem('viix999_code')||'';
 var parts=new Set(JSON.parse(localStorage.getItem('viix999_parts')||'[]'));
 var sock=null;
 var timerSeconds=0,timerInterval=null,timerRunning=false;
@@ -457,6 +551,20 @@ var CORRECT_PASSWORD='a1a1';
 // HOW MANY WINNERS TO PICK (used by future "choose winner" button)
 var winnersToPick=parseInt(localStorage.getItem('viix999_winners_pick'))||1;
 if(winnersToPick<1)winnersToPick=1;
+
+// MIN MESSAGES TO REGISTER PARTICIPANT
+var minMsgs=parseInt(localStorage.getItem('viix999_minmsgs'))||1;
+if(minMsgs<1)minMsgs=1;
+document.getElementById('minMsgs').value=minMsgs;
+function getMinMsgs(){
+  var inp=document.getElementById('minMsgs');
+  var v=parseInt(inp&&inp.value)||1;
+  if(v<1)v=1;
+  if(minMsgs!==v){minMsgs=v;localStorage.setItem('viix999_minmsgs',minMsgs);}
+  return minMsgs;
+}
+function saveMinMsgs(){getMinMsgs();updateMiddleHint();}
+function adjustMinMsgs(d){var inp=document.getElementById('minMsgs');inp.value=Math.max(1,(parseInt(inp.value)||1)+d);getMinMsgs();updateMiddleHint();}
 
 function getWinnersPick(){
   var inp=document.getElementById('winnersPick');
@@ -575,7 +683,7 @@ document.getElementById('winnersPick').value=winnersToPick;
 loadFilters();
 updateMiddleHint();
 
-function saveCode(){code=document.getElementById('code').value.trim()||'+';localStorage.setItem('viix999_code',code);updateMiddleHint();}
+function saveCode(){code=document.getElementById('code').value.trim();localStorage.setItem('viix999_code',code);updateMiddleHint();}
 function resetParts(){parts.clear();render();renderModal();renderParticipantsCount();}
 function confirmResetParts(){if(confirm('Сбросить всех участников?'))resetParts();}
 function openModal(){renderModal();document.getElementById('modal').classList.add('open');}
@@ -588,11 +696,13 @@ function updateMiddleHint(){
   var h=document.getElementById('middleHint');
   if(!h)return;
   if(filterState.ALL){
-    h.innerHTML='<span class="hint-main">Напиши любое сообщение в чат<br>для участия в прокачке</span>';
+    h.innerHTML='<span class="hint-main">Напиши '+getMinMsgs()+(getMinMsgs()>1?' сообщения':' сообщение')+' в чат<br>для участия в прокачке</span>';
   }else{
-    var code=document.getElementById('code').value.trim()||'+';
-    h.innerHTML='<span class="hint-code">'+esc(code)+'</span><span class="hint-main">в чат для участия в прокачке</span>';
+    var code=document.getElementById('code').value.trim();
+    var word=code?'<span class="hint-code">'+esc(code)+'</span>':'';
+    h.innerHTML=word+'<span class="hint-main">в чат для участия в прокачке</span>';
   }
+  h.innerHTML+='<span class="hint-filter">Минимум сообщений: '+getMinMsgs()+'</span>';
 }
 document.getElementById('tb-list').onclick=function(e){if(e.target&&e.target.classList.contains('del'))removePart(e.target.getAttribute('data-n'));};
 function render(){var c=document.getElementById('cnt');if(c)c.textContent=parts.size;renderParticipantsCount();localStorage.setItem('viix999_parts',JSON.stringify(Array.from(parts)));}
@@ -625,6 +735,65 @@ function renderLastWinners(){
         '<span class="cond">'+cond+'</span>'+
       '</div></div>';
   }).join('');
+}
+
+function openLastWinners(){renderLastWinners();document.getElementById('lastWinnersModal').classList.add('open');}
+function closeLastWinners(){document.getElementById('lastWinnersModal').classList.remove('open');}
+
+// ===== TWITCH MENU =====
+var pointBuyers=new Set(JSON.parse(localStorage.getItem('viix999_point_buyers')||'[]'));
+function openTwitchMenu(){
+  document.getElementById('twitchChannelInput').value=CH;
+  document.getElementById('twitchPointsChannel').value=localStorage.getItem('viix999_points_channel')||'';
+  renderBuyers();
+  document.getElementById('twitchMenuModal').classList.add('open');
+}
+function closeTwitchMenu(){document.getElementById('twitchMenuModal').classList.remove('open');}
+function showTwitchTab(name){
+  ['connect','wheel','buyers','timer'].forEach(function(t){
+    var pane=document.getElementById('pane'+t.charAt(0).toUpperCase()+t.slice(1));
+    if(pane)pane.style.display=(t===name)?'flex':'none';
+    var btn=document.getElementById('tabBtn'+t.charAt(0).toUpperCase()+t.slice(1));
+    if(btn)btn.classList.toggle('active',t===name);
+  });
+  if(name==='timer')displayTimer();
+}
+function connectTwitchChannel(){
+  var ch=document.getElementById('twitchChannelInput').value.trim();
+  var pc=document.getElementById('twitchPointsChannel').value.trim();
+  if(ch){CH=ch;}
+  if(pc){localStorage.setItem('viix999_points_channel',pc);}
+  var st=document.getElementById('twitchStatus');
+  st.textContent='Подключение к #'+CH.toLowerCase()+'...';
+  var fr=document.getElementById('twitch-chat-frame');
+  fr.src='https://www.twitch.tv/embed/'+CH+'/chat?parent='+encodeURIComponent(location.hostname||'localhost')+'&darkpopout&darkmode';
+  sock.onopen=null; // переопределим ниже через reconnect
+  connect();
+  var origOnopen=sock.onopen;
+  sock.onopen=function(){
+    st.textContent='Подключено к #'+CH.toLowerCase()+' ✓';
+    if(typeof origOnopen==='function')origOnopen.call(sock);
+  };
+}
+function renderBuyers(){
+  var l=document.getElementById('buyersList');
+  if(!l)return;
+  l.innerHTML=Array.from(pointBuyers).map(function(b){
+    return'<div class="p"><span>'+esc(b)+'</span><button class="del" data-b="'+esc(b)+'" onclick="removePointBuyer(\''+esc(b).replace(/'/g,"\\'")+'\')">✕</button></div>';
+  }).join('')||'<div style="color:var(--muted);text-align:center;padding:14px">Список пуст</div>';
+}
+function addPointBuyer(){
+  var v=document.getElementById('buyerNameInput').value.trim();
+  if(!v)return;
+  pointBuyers.add(v);
+  localStorage.setItem('viix999_point_buyers',JSON.stringify(Array.from(pointBuyers)));
+  document.getElementById('buyerNameInput').value='';
+  renderBuyers();
+}
+function removePointBuyer(n){
+  pointBuyers.delete(n);
+  localStorage.setItem('viix999_point_buyers',JSON.stringify(Array.from(pointBuyers)));
+  renderBuyers();
 }
 
 // LEADERBOARD RENDERER
@@ -839,6 +1008,17 @@ function showWinner(name){
   timerLabel.innerText='00:00:00';
   winNick.innerText=name;
   document.getElementById('reroll-counter-display').innerText='Рероллов: '+rerollCount;
+  updateWinMsgCount();
+  var f=document.getElementById('win-form-panel');
+  if(f)f.style.display='none';
+  var ai=document.getElementById('win-amount-input');
+  if(ai)ai.value='';
+  var di=document.getElementById('win-deposit-input');
+  if(di)di.value='';
+  var ti=document.getElementById('win-tg-input');
+  if(ti)ti.value='';
+  var si=document.getElementById('win-site-input');
+  if(si)si.value='---';
   renderWinnerHistory(name);
   document.getElementById('winner-screen').classList.add('open');
   var hCont=document.getElementById('win-chat-history');
@@ -854,6 +1034,8 @@ function showWinner(name){
   },1000);
   currentSession={winner:name.toUpperCase(),date:new Date().toLocaleDateString('ru-RU'),startTime:Date.now(),messages:[]};
 }
+
+function updateWinMsgCount(){var el=document.getElementById('win-msg-count');if(el)el.textContent='Сообщений: '+winnerMessages.length;}
 
 function winnerCooldownInfo(name){
   var h=winnerHistory[name.toLowerCase()]||[];
@@ -907,14 +1089,39 @@ function saveWinnerResult(isReroll){
   renderLastWinners();
   renderLeaderboard();
 }
-function closeWinnerScreen(){
-  saveWinnerResult(false);
+function openWinnerForm(){
+  var p=document.getElementById('win-form-panel');
+  if(p){p.style.display='flex';}
+}
+function saveWinnerStats(){
+  if(!currentWinner)return;
+  var amt=parseFloat(document.getElementById('win-amount-input').value)||0;
+  var dep=parseFloat(document.getElementById('win-deposit-input').value)||0;
+  var tg=document.getElementById('win-tg-input').value.trim();
+  var site=document.getElementById('win-site-input').value||'---';
+  var key=currentWinner.toLowerCase();
+  var h=winnerHistory[key]||[];
+  for(var i=h.length-1;i>=0;i--){
+    if(!h[i].isReroll){h[i].amount=amt;h[i].deposit=dep;h[i].tg=tg;h[i].site=site;break;}
+  }
+  try{localStorage.setItem('viix999_winner_history',JSON.stringify(winnerHistory));}catch(e){}
+  renderLastWinners();
+  renderLeaderboard();
+  finishCloseWinner();
+}
+function finishCloseWinner(){
   document.documentElement.classList.remove('showing-winner');
   document.getElementById('winner-screen').classList.remove('open');
+  var p=document.getElementById('win-form-panel');
+  if(p)p.style.display='none';
   winTimerActive=false;
   clearInterval(window.winInt);
   currentWinner=null;
   currentSession=null;
+}
+function closeWinnerScreen(){
+  saveWinnerResult(false);
+  openWinnerForm();
 }
 
 function closeStats(){document.getElementById('statsModal').classList.remove('show');}
@@ -1039,15 +1246,16 @@ function connect(){
     else{user=d.split('!')[0].substring(1);}
     msg=d.split(mk)[1].trim();
 
-    if(filterState.ALL&&!parts.has(user)){parts.add(user);render();}
-    if(msg.trim().toLowerCase()===code.toLowerCase()&&!parts.has(user)){parts.add(user);render();}
-
     var time=new Date().toLocaleTimeString();
     var msgId=tags['id']||null;
     renderChatMessage(user,msg,time,msgId,tags['badges'],tags['color']);
 
     if(!userMessages[user])userMessages[user]=[];
     userMessages[user].push({time:time,text:msg,id:msgId});
+    // Фильтр: участником становится только после N сообщений
+    if(!parts.has(user)&&userMessages[user].length>=getMinMsgs()){
+      if(filterState.ALL||msg.trim().toLowerCase()===code.toLowerCase()){parts.add(user);render();}
+    }
 
     if(currentWinner&&user.toLowerCase()===currentWinner.toLowerCase()){
       if(winTimerActive){
@@ -1071,6 +1279,7 @@ function connect(){
       if(currentSession)currentSession.endTime=Date.now();
     }
     winnerMessages.push({user:user,msg:msg,isWinner:currentWinner&&user.toLowerCase()===currentWinner.toLowerCase()});
+    updateWinMsgCount();
   };
   sock.onclose=function(){chatStatus('ОТКЛЮЧЕН, ПЕРЕПОДКЛЮЧЕНИЕ ЧЕРЕЗ 3с','err');setTimeout(connect,3000);};
   sock.onerror=function(){chatStatus('ОШИБКА СОКЕТА','err');};
