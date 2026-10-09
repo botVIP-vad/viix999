@@ -389,6 +389,11 @@ html.showing-winner body{overflow:hidden}
     <span class="filter-tag-txt">GLOBAL</span>
     <span class="filter-desc">Только те, кто никогда не побеждал. Рерольнутые могут.</span>
   </label>
+  <label class="filter-row switch-row">
+    <input type="checkbox" id="fACTIVE" onchange="saveFilters()"><span class="cbox"></span>
+    <span class="filter-tag-txt">АКТИВНЫЕ</span>
+    <span class="filter-desc">Добавлять после 5 сообщений в чате.</span>
+  </label>
   <button class="winner-pick-btn" onclick="chooseWinners()">ВЫБРАТЬ ПОБЕДИТЕЛЯ</button>
   <button class="reset-parts-btn" onclick="confirmResetParts()">СБРОСИТЬ УЧАСТНИКОВ</button>
   <button class="winner-pick-btn" id="openWelvolAppButton" style="background:rgba(145,70,255,.12);color:#fff;border:1px solid rgba(145,70,255,.4)" onclick="openWelvolApp()">🔴 TWITCH</button>
@@ -452,8 +457,8 @@ html.showing-winner body{overflow:hidden}
 </div>
 
 <div class="welvol-overlay" id="welvolAppOverlay" aria-hidden="true">
-  <iframe id="welvolAppFrame" src="welvol.html" title="Twitch welvol"></iframe>
-  <button class="welvol-close" type="button" onclick="closeWelvolApp()" aria-label="Закрыть Twitch welvol">✕</button>
+  <iframe id="welvolAppFrame" src="welvol.html" title="Twitch VIIX999"></iframe>
+  <button class="welvol-close" type="button" onclick="closeWelvolApp()" aria-label="Закрыть Twitch VIIX999">✕</button>
 </div>
 
 <!-- LAST WINNERS MODAL -->
@@ -646,13 +651,13 @@ function adjustWinners(d){
   getWinnersPick();
 }
 
-// WINNER FILTERS (FM / NEW / NW / GLOBAL)
-var filterState={ALL:false,FM:false,GLOBAL:false};
+// WINNER FILTERS (FM / GLOBAL / ACTIVE CHATTERS)
+var filterState={ALL:false,FM:false,GLOBAL:false,ACTIVE:false};
 
 function loadFilters(){
   try{
     var saved=JSON.parse(localStorage.getItem('viix999_filters')||'{}');
-    ['ALL','FM','GLOBAL'].forEach(function(k){
+    ['ALL','FM','GLOBAL','ACTIVE'].forEach(function(k){
       filterState[k]=!!saved[k];
       var el=document.getElementById('f'+k);
       if(el)el.checked=filterState[k];
@@ -660,7 +665,7 @@ function loadFilters(){
   }catch(e){}
 }
 function saveFilters(){
-  ['ALL','FM','GLOBAL'].forEach(function(k){
+  ['ALL','FM','GLOBAL','ACTIVE'].forEach(function(k){
     var el=document.getElementById('f'+k);
     filterState[k]=el?!!el.checked:false;
   });
@@ -683,6 +688,7 @@ function filterCandidates(arr){
   return arr.filter(function(name){
     if(filterState.FM&&userMsgCount(name)>1)return false;
     if(filterState.GLOBAL&&userHasRealWin(name))return false;
+    if(filterState.ACTIVE&&userMsgCount(name)<5)return false;
     return true;
   });
 }
@@ -1412,6 +1418,7 @@ function startQuickRoll(){if(parts.size===0){alert('Нет участников!
 var winTimerActive=false;
 var winnerHistory=JSON.parse(localStorage.getItem('viix999_winner_history')||'{}');
 var userMessages={};
+var userEntryMatches={};
 var rerollCount=0;
 
 // ===== ОБЪЕДИНЁННАЯ СТАТИСТИКА: vix + welvol =====
@@ -1496,8 +1503,16 @@ function updateWinMsgCount(){
   if(!el)return;
   var n=0;
   if(currentWinner){
-    var w=currentWinner.toLowerCase();
-    winnerMessages.forEach(function(m){if(m.user&&m.user.toLowerCase()===w)n++;});
+    var messages=userMessages[currentWinner]||[];
+    if(!messages.length){
+      var winnerLogin=currentWinner.toLowerCase();
+      Object.keys(userMessages).some(function(name){
+        if(name.toLowerCase()!==winnerLogin)return false;
+        messages=userMessages[name];
+        return true;
+      });
+    }
+    n=messages.length;
   }
   el.textContent='Сообщений: '+n;
 }
@@ -1682,6 +1697,7 @@ function connect(){
         if(login&&userMessages[login]){
           userMessages[login]=userMessages[login].filter(function(m){return m.id!==targetMsgId;});
         }
+        updateWinMsgCount();
       }
       return;
     }
@@ -1698,6 +1714,7 @@ function connect(){
         Object.keys(userMessages).forEach(function(k){
           if(k.toLowerCase()===targetUser)delete userMessages[k];
         });
+        updateWinMsgCount();
       }
       return;
     }
@@ -1717,9 +1734,13 @@ function connect(){
 
     if(!userMessages[user])userMessages[user]=[];
     userMessages[user].push({time:time,text:msg,id:msgId});
-    // Фильтр: участником становится только после N сообщений
-    if(!parts.has(user)&&userMessages[user].length>=getMinMsgs()){
-      if(filterState.ALL||msg.trim().toLowerCase()===code.toLowerCase()){parts.add(user);render();}
+    var messageMatchesCode=msg.trim().toLowerCase()===code.toLowerCase();
+    if(filterState.ALL||messageMatchesCode)userEntryMatches[user]=true;
+    var requiredMessages=Math.max(getMinMsgs(),filterState.ACTIVE?5:1);
+    var hasEntry=userEntryMatches[user]&&(filterState.ACTIVE||filterState.ALL||messageMatchesCode);
+    if(!parts.has(user)&&userMessages[user].length>=requiredMessages&&hasEntry){
+      parts.add(user);
+      render();
     }
 
     if(currentWinner&&user.toLowerCase()===currentWinner.toLowerCase()){
