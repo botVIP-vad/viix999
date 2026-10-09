@@ -391,7 +391,7 @@ html.showing-winner body{overflow:hidden}
   </label>
   <button class="winner-pick-btn" onclick="chooseWinners()">ВЫБРАТЬ ПОБЕДИТЕЛЯ</button>
   <button class="reset-parts-btn" onclick="confirmResetParts()">СБРОСИТЬ УЧАСТНИКОВ</button>
-  <button class="winner-pick-btn" style="background:rgba(145,70,255,.12);color:#fff;border:1px solid rgba(145,70,255,.4)" onclick="location.href='welvol.html'">🔴 TWITCH</button>
+  <button class="winner-pick-btn" id="openWelvolAppButton" style="background:rgba(145,70,255,.12);color:#fff;border:1px solid rgba(145,70,255,.4)" onclick="openWelvolApp()">🔴 TWITCH</button>
   <div class="parts-count" onclick="openModal()">
     <span class="pc-label">Участников:</span>
     <span class="pc-num" id="partsCount">0</span>
@@ -450,6 +450,12 @@ html.showing-winner body{overflow:hidden}
     </div>
   </div>
 </div>
+
+<div class="welvol-overlay" id="welvolAppOverlay" aria-hidden="true">
+  <iframe id="welvolAppFrame" src="welvol.html" title="Twitch welvol"></iframe>
+  <button class="welvol-close" type="button" onclick="closeWelvolApp()" aria-label="Закрыть Twitch welvol">✕</button>
+</div>
+
 <!-- LAST WINNERS MODAL -->
 <div class="modal" id="lastWinnersModal">
   <div class="tablebox" style="width:420px">
@@ -812,6 +818,17 @@ function openWelvolScreen(){
   document.getElementById('welvolOverlay').classList.add('open');
 }
 function closeWelvolScreen(){document.getElementById('welvolOverlay').classList.remove('open');}
+function openWelvolApp(){
+  var overlay=document.getElementById('welvolAppOverlay');
+  overlay.classList.add('open');
+  overlay.setAttribute('aria-hidden','false');
+}
+function closeWelvolApp(){
+  var overlay=document.getElementById('welvolAppOverlay');
+  overlay.classList.remove('open');
+  overlay.setAttribute('aria-hidden','true');
+  document.getElementById('openWelvolAppButton').focus();
+}
 function showTwitchTab(name){
   ['connect','wheel','buyers','timer'].forEach(function(t){
     var pane=document.getElementById('pane'+t.charAt(0).toUpperCase()+t.slice(1));
@@ -1582,7 +1599,7 @@ function closeModals(){
   clearInterval(window.winInt);
 }
 
-document.addEventListener('keydown',function(e){if(e.key==='Escape'){closeModals();closeWheel();var wo=document.getElementById('welvolOverlay');if(wo&&wo.classList.contains('open'))closeWelvolScreen();}});
+document.addEventListener('keydown',function(e){if(e.key==='Escape'){closeModals();closeWheel();var wo=document.getElementById('welvolOverlay');if(wo&&wo.classList.contains('open'))closeWelvolScreen();closeWelvolApp();}});
 
 // ===== TWITCH BADGES (per IRC tags docs: badges=broadcaster/1,subscriber/12,...) =====
 // Иконки берём напрямую с CDN Twitch по известным UUID глобальных бейджей
