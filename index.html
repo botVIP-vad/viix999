@@ -579,7 +579,8 @@ html.showing-winner body{overflow:hidden}
       <button class="reset" onclick="finishCloseWinner()">ПРОПУСТИТЬ</button>
     </div>
     <div class="win-actions">
-      <button class="reset" onclick="closeWinnerScreen()">ЗАКРЫТЬ</button>
+      <button class="reset" type="button" onclick="openWinnerForm()">ДАННЫЕ</button>
+      <button class="reset" id="winCloseButton" type="button" onclick="closeWinnerScreen()">ЗАКРЫТЬ</button>
       <button class="reset" style="background:rgba(245,158,11,0.15);border-color:#f59e0b;color:#f59e0b;" onclick="reSpinToHome()">ПЕРЕКРУТИТЬ</button>
     </div>
   </div>
@@ -1420,6 +1421,7 @@ var winnerHistory=JSON.parse(localStorage.getItem('viix999_winner_history')||'{}
 var userMessages={};
 var userEntryMatches={};
 var rerollCount=0;
+var winnerResultSaved=false;
 
 // ===== ОБЪЕДИНЁННАЯ СТАТИСТИКА: vix + welvol =====
 // welvol хранит историю массивом в 'wheelbot_winner_history':
@@ -1459,6 +1461,7 @@ function showWinner(name){
   closeModals();
   closeWheel();
   currentWinner=name;
+  winnerResultSaved=false;
   winTimerActive=true;
   winnerResponded=false;
   winnerMessages=[];
@@ -1562,14 +1565,17 @@ function reSpinToHome(){
 
 function saveWinnerResult(isReroll){
   if(!currentWinner)return;
+  if(!isReroll&&winnerResultSaved)return;
   var key=currentWinner.toLowerCase();
   if(!winnerHistory[key])winnerHistory[key]=[];
   winnerHistory[key].push({amount:0,deposit:0,tg:'',site:'---',date:new Date().toLocaleDateString('ru-RU')+' '+new Date().toLocaleTimeString('ru-RU'),isReroll:!!isReroll});
+  if(!isReroll)winnerResultSaved=true;
   try{localStorage.setItem('viix999_winner_history',JSON.stringify(winnerHistory));}catch(e){}
   renderLastWinners();
   renderLeaderboard();
 }
 function openWinnerForm(){
+  saveWinnerResult(false);
   var p=document.getElementById('win-form-panel');
   if(p){p.style.display='flex';}
 }
@@ -1598,10 +1604,11 @@ function finishCloseWinner(){
   clearInterval(window.winInt);
   currentWinner=null;
   currentSession=null;
+  winnerResultSaved=false;
 }
 function closeWinnerScreen(){
   saveWinnerResult(false);
-  openWinnerForm();
+  finishCloseWinner();
 }
 
 function closeStats(){document.getElementById('statsModal').classList.remove('show');}
