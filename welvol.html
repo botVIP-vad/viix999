@@ -2661,7 +2661,7 @@
         '&scope=' + encodeURIComponent(TWITCH_SCOPE);
 
       console.log('Redirecting to Twitch:', url);
-      window.location.href = url;
+      window.top.location.href = url;
     };
 
     // Функция выхода
