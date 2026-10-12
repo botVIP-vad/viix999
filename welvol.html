@@ -2660,8 +2660,13 @@
         '&response_type=token' +
         '&scope=' + encodeURIComponent(TWITCH_SCOPE);
 
+      if(window.top !== window.self){
+        window.parent.postMessage({ type:'welvol-twitch-oauth', clientId:cid }, window.location.origin);
+        return;
+      }
+
       console.log('Redirecting to Twitch:', url);
-      window.top.location.href = url;
+      window.location.href = url;
     };
 
     // Функция выхода
