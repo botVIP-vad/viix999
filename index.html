@@ -617,6 +617,48 @@ var passwordInput=document.getElementById('passwordInput');
 var passwordError=document.getElementById('passwordError');
 var CORRECT_PASSWORD='a1a1';
 
+(function(){
+  var twitchAuthKey='twitch_auth_data';
+  var authHash=window.location.hash;
+  if(authHash){
+    var authParams=new URLSearchParams(authHash.substring(1));
+    var accessToken=authParams.get('access_token');
+    if(accessToken){
+      var savedAuth={};
+      try{savedAuth=JSON.parse(localStorage.getItem(twitchAuthKey)||'{}');}catch(e){}
+      if(savedAuth.clientId){
+        savedAuth.accessToken=accessToken;
+        savedAuth.user=null;
+        localStorage.setItem(twitchAuthKey,JSON.stringify(savedAuth));
+        history.replaceState(null,null,window.location.pathname+window.location.search);
+        var overlay=document.getElementById('welvolAppOverlay');
+        var frame=document.getElementById('welvolAppFrame');
+        overlay.classList.add('open');
+        overlay.setAttribute('aria-hidden','false');
+        frame.src='welvol.html';
+      }else{
+        console.error('Twitch OAuth returned a token, but the Client ID was not saved.');
+      }
+    }else if(authParams.has('error')){
+      console.error('Twitch OAuth error:',authParams.get('error_description')||authParams.get('error'));
+      history.replaceState(null,null,window.location.pathname+window.location.search);
+    }
+  }
+
+  window.addEventListener('message',function(event){
+    var frame=document.getElementById('welvolAppFrame');
+    var data=event.data;
+    if(event.origin!==window.location.origin||!frame||event.source!==frame.contentWindow||
+       !data||data.type!=='welvol-twitch-oauth'||typeof data.clientId!=='string'||!data.clientId.trim())return;
+
+    var scopes='user:read:email channel:read:redemptions channel:manage:redemptions chat:read chat:edit';
+    var redirectUri=window.location.origin+window.location.pathname;
+    var authUrl='https://id.twitch.tv/oauth2/authorize?client_id='+encodeURIComponent(data.clientId.trim())
+      +'&redirect_uri='+encodeURIComponent(redirectUri)+'&response_type=token&scope='+encodeURIComponent(scopes);
+    window.location.href=authUrl;
+  });
+})();
+
 // HOW MANY WINNERS TO PICK (used by future "choose winner" button)
 var winnersToPick=parseInt(localStorage.getItem('viix999_winners_pick'))||1;
 if(winnersToPick<1)winnersToPick=1;
