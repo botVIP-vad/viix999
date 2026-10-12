@@ -1506,16 +1506,21 @@ function updateWinMsgCount(){
   if(!el)return;
   var n=0;
   if(currentWinner){
-    var messages=userMessages[currentWinner]||[];
-    if(!messages.length){
-      var winnerLogin=currentWinner.toLowerCase();
-      Object.keys(userMessages).some(function(name){
-        if(name.toLowerCase()!==winnerLogin)return false;
-        messages=userMessages[name];
-        return true;
+    var winnerName=currentWinner.toLowerCase();
+    var foundByName=false;
+    Object.keys(userMessages).forEach(function(name){
+      if(name.toLowerCase()===winnerName){
+        n+=userMessages[name].length;
+        foundByName=true;
+      }
+    });
+    if(!foundByName){
+      Object.keys(userMessages).forEach(function(name){
+        userMessages[name].forEach(function(message){
+          if(String(message.login||'').toLowerCase()===winnerName)n++;
+        });
       });
     }
-    n=messages.length;
   }
   el.textContent='Сообщений: '+n;
 }
@@ -1696,14 +1701,13 @@ function connect(){
     var clearMsgMatch=d.indexOf(' CLEARMSG #'+CH+' :');
     if(clearMsgMatch>=0){
       var targetMsgId=tags['target-msg-id'];
-      var login=tags['login']||'';
       if(targetMsgId){
         chatMessages=chatMessages.filter(function(m){return m.id!==targetMsgId;});
         renderChatOverlay();
         // Удалить также из userMessages
-        if(login&&userMessages[login]){
-          userMessages[login]=userMessages[login].filter(function(m){return m.id!==targetMsgId;});
-        }
+        Object.keys(userMessages).forEach(function(name){
+          userMessages[name]=userMessages[name].filter(function(m){return m.id!==targetMsgId;});
+        });
         updateWinMsgCount();
       }
       return;
@@ -1718,8 +1722,12 @@ function connect(){
         chatMessages=chatMessages.filter(function(m){return m.user.toLowerCase()!==targetUser;});
         renderChatOverlay();
         // Удалить из userMessages
-        Object.keys(userMessages).forEach(function(k){
-          if(k.toLowerCase()===targetUser)delete userMessages[k];
+        Object.keys(userMessages).forEach(function(name){
+          var remaining=userMessages[name].filter(function(message){
+            return String(message.login||name).toLowerCase()!==targetUser;
+          });
+          if(remaining.length)userMessages[name]=remaining;
+          else delete userMessages[name];
         });
         updateWinMsgCount();
       }
@@ -1733,6 +1741,8 @@ function connect(){
     if(tags['display-name'])user=tags['display-name'];
     else if(d.charAt(0)==='@'){var p=d.split(' ');user=p[1].split('!')[0].substring(1);}
     else{user=d.split('!')[0].substring(1);}
+    var prefix=d.split(' ')[d.charAt(0)==='@'?1:0]||'';
+    var userLogin=String(tags['login']||prefix.split('!')[0].replace(/^:/,'')||user).toLowerCase();
     msg=d.split(mk)[1].trim();
 
     var time=new Date().toLocaleTimeString();
@@ -1740,7 +1750,7 @@ function connect(){
     renderChatMessage(user,msg,time,msgId,tags['badges'],tags['color']);
 
     if(!userMessages[user])userMessages[user]=[];
-    userMessages[user].push({time:time,text:msg,id:msgId});
+    userMessages[user].push({time:time,text:msg,id:msgId,login:userLogin});
     var messageMatchesCode=msg.trim().toLowerCase()===code.toLowerCase();
     if(filterState.ALL||messageMatchesCode)userEntryMatches[user]=true;
     var requiredMessages=Math.max(getMinMsgs(),filterState.ACTIVE?5:1);
