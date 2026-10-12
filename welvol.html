@@ -17,7 +17,7 @@
     --grad:linear-gradient(135deg,#bf94ff,#9146ff 45%,#772ce8);
     --font:'Inter',system-ui,'Segoe UI',Roboto,sans-serif;
     /* Собственный Twitch-чат */
-    --tchat-bg:#18181b; --tchat-line:rgba(255,255,255,.09); --tchat-hover:rgba(255,255,255,.045);
+    --tchat-bg:#0e0f12; --tchat-line:rgba(255,255,255,.09); --tchat-hover:rgba(255,255,255,.045);
     --tchat-accent:#9146ff; --tchat-accent-2:#772ce8;
   }
   *{box-sizing:border-box;margin:0;padding:0}
@@ -124,21 +124,22 @@
   body.stats-open .number-fab, body.stats-open .chat-fab, body.stats-open .tw-fab{z-index:210}
 
   /* ===== Chat overlay ===== */
+  body.chat-open{height:100vh;overflow:hidden}
   .chat-overlay{position:fixed;inset:0;z-index:200;display:none;flex-direction:column;align-items:center;justify-content:center;
-    background:rgba(14,15,18,.92);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);padding:20px}
+    overflow:hidden;background:var(--bg);padding:20px}
   .chat-overlay.active{display:flex;animation:twFade .25s ease}
   .chat-overlay .close{position:absolute;top:20px;right:24px;z-index:5;background:rgba(255,255,255,.08);border:1px solid var(--line);
     color:var(--ink);width:42px;height:42px;border-radius:50%;font-size:1.4rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.2s}
   .chat-overlay .close:hover{background:var(--donation);color:#fff}
-  .chat-box{width:min(72vw,1200px);height:calc(100vh - 40px);max-width:1200px;min-width:420px;display:flex;flex-direction:column}
-  @media(max-width:600px){.chat-box{width:90vw;height:calc(100vh - 40px);min-width:0}}
+  .chat-box{width:min(72vw,1200px);height:100%;max-height:100%;max-width:1200px;min-width:420px;min-height:0;display:flex;flex-direction:column}
+  @media(max-width:600px){.chat-box{width:90vw;height:100%;min-width:0}}
 
   /* ===== Собственный чат Twitch (IRC over WebSocket) ===== */
   .tchat-mount{flex:1;min-width:0;min-height:0;display:flex}
   .tchat{flex:1;min-width:0;min-height:0;display:flex;flex-direction:column;background:var(--tchat-bg);
     border:1px solid var(--line);border-radius:16px;overflow:hidden}
   .tchat-head{display:flex;align-items:center;gap:8px;flex-shrink:0;padding:11px 14px;
-    border-bottom:1px solid var(--tchat-line);background:rgba(255,255,255,.03);
+    border-bottom:1px solid var(--tchat-line);background:var(--tchat-bg);
     font-size:.76rem;font-weight:800;letter-spacing:.4px;text-transform:uppercase}
   .tchat-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;transition:.25s;
     background:var(--donation);box-shadow:0 0 8px rgba(246,100,108,.7)}
@@ -171,7 +172,7 @@
   .tchat-bits{display:inline-block;margin-right:5px;padding:1px 7px;border-radius:999px;
     background:rgba(145,70,255,.18);color:var(--points);font-size:.7rem;font-weight:800}
   .tchat-text a{color:var(--primary-2);text-decoration:underline}
-  .tchat-form{display:flex;gap:8px;flex-shrink:0;padding:10px 12px;border-top:1px solid var(--tchat-line);background:rgba(255,255,255,.03)}
+  .tchat-form{display:flex;gap:8px;flex-shrink:0;padding:10px 12px;border-top:1px solid var(--tchat-line);background:var(--tchat-bg)}
   .tchat-input{flex:1;min-width:0;background:rgba(255,255,255,.06);border:1px solid var(--line);border-radius:10px;
     color:var(--ink);font-family:var(--font);font-size:.9rem;padding:10px 12px;outline:none;transition:.2s}
   .tchat-input:focus{border-color:var(--tchat-accent);background:rgba(145,70,255,.1)}
@@ -1758,31 +1759,44 @@
   });
 
   // Twitch overlay
+  window.showMainSettings = function(){
+    document.querySelector('.main-menu').classList.remove('hidden');
+    document.getElementById('settingsFab').classList.add('active');
+  };
+  window.notifyWelvolHostView = function(open){
+    if(window.parent!==window){
+      window.parent.postMessage({type:'welvol-inner-view',open:!!open},window.location.origin);
+    }
+  };
   function openTwitch(){
     closeStatsIfOpen();
     closeRewards();
     document.getElementById('twOverlay').classList.add('active');
+    window.notifyWelvolHostView(true);
   }
-  function closeTwitch(){ document.getElementById('twOverlay').classList.remove('active'); }
+  function closeTwitch(){
+    document.getElementById('twOverlay').classList.remove('active');
+    window.notifyWelvolHostView(false);
+    window.showMainSettings();
+  }
 
   // Toggle main menu (settings button) - like a toggle/X button
   function toggleMainMenu(){
+    var menu = document.querySelector('.main-menu');
+    var shouldShowMenu = menu.classList.contains('hidden');
     closeStatsIfOpen();
     closeRewards();
+    closeTwitch();
     // Закрываем чат, если он открыт
     if(typeof closeChat === 'function') closeChat();
     // Сначала закрываем рулетку (как крестик ✕)
     closeWheel();
     // Затем переключаем меню
-    var menu = document.querySelector('.main-menu');
-    var fab = document.getElementById('settingsFab');
-    var isHidden = menu.classList.contains('hidden');
-    if(isHidden){
-      menu.classList.remove('hidden');
-      fab.classList.add('active');
-    } else {
+    if(shouldShowMenu){
+      window.showMainSettings();
+    }else{
       menu.classList.add('hidden');
-      fab.classList.remove('active');
+      document.getElementById('settingsFab').classList.remove('active');
     }
   }
 
@@ -1834,6 +1848,7 @@
     document.getElementById('numberFab').classList.remove('active');
     stopNumberGuessing();
     updateNumberChat(false);
+    window.showMainSettings();
   }
 
   /* =========================================================================
@@ -2445,6 +2460,7 @@
     document.getElementById('chatFab').classList.remove('active');
     document.body.classList.remove('chat-open');
     mainChatView.close();
+    window.showMainSettings();
   }
   function toggleChat(){
     if(chatOverlayEl.classList.contains('active')) closeChat();
@@ -2535,6 +2551,7 @@
           saveTwitchData();
           // Открываем оверлей Twitch чтобы видеть статус входа
           document.getElementById('twOverlay').classList.add('active');
+          window.notifyWelvolHostView(true);
           fetchTwitchUser(token);
         }
       }
@@ -2545,6 +2562,7 @@
       // Открываем оверлей Twitch чтобы ошибка была видна
       var ov = document.getElementById('twOverlay');
       if(ov) ov.classList.add('active');
+      window.notifyWelvolHostView(true);
       var statusText = document.getElementById('twStatusText');
       var statusBar = document.getElementById('twStatusBar');
       if(statusText) statusText.innerHTML = msg.replace(/\n/g, '<br/>');
@@ -2897,6 +2915,7 @@
       document.getElementById('rewardsOverlay').classList.remove('active');
       document.getElementById('rewardsFab').classList.remove('active');
       document.body.classList.remove('rewards-open');
+      window.showMainSettings();
     };
 
     function renderRewards(customMessage){
@@ -3521,6 +3540,7 @@
     document.getElementById('statsOverlay').classList.remove('active');
     document.body.classList.remove('stats-open');
     document.getElementById('statsFab').classList.remove('active');
+    window.showMainSettings();
     };
 
   window.setStatsPage = function(page){
