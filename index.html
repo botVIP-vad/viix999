@@ -7,7 +7,7 @@
 <style>
 :root{--bg:#0e0e10;--panel:#18181b;--accent:#9147ff;--accent-soft:rgba(145,70,255,.06);--text:#efeff1;--muted:#adadb8}
 *{box-sizing:border-box}
-html,body{margin:0;height:100%;padding:0;background:#0e0e10;color:var(--text);font-family:'Inter',sans-serif;font-weight:600}
+html,body{margin:0;height:100%;padding:0;overflow:hidden;background:#0e0e10;color:var(--text);font-family:'Inter',sans-serif;font-weight:600}
 #bgvid{position:fixed;top:0;left:0;width:100vw;height:100vh;object-fit:cover;z-index:0;opacity:.4;pointer-events:none}
 .left-col{position:fixed;top:22px;bottom:22px;left:22px;z-index:49;width:340px;display:flex;flex-direction:column;gap:10px}
 .topbar{position:static;display:flex;gap:10px;align-items:stretch}
@@ -58,6 +58,8 @@ html,body{margin:0;height:100%;padding:0;background:#0e0e10;color:var(--text);fo
 #winnersPick{width:52px;padding:5px;border-radius:8px;background:rgba(0,0,0,.22);color:var(--accent);font-size:18px;font-weight:900;text-align:center;outline:none;transition:.2s;border:1px solid rgba(145,70,255,.3);-moz-appearance:textfield}
 #winnersPick::-webkit-inner-spin-button,#winnersPick::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
 #winnersPick:focus{border-color:var(--accent);box-shadow:0 0 0 2px rgba(145,70,255,.15)}
+#minMsgs{font-size:22px!important;font-weight:900!important;-moz-appearance:textfield}
+#minMsgs::-webkit-inner-spin-button,#minMsgs::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
 .topbar-count{min-width:44px;text-align:center;font-size:22px;font-weight:900;color:var(--text);text-shadow:0 0 12px rgba(145,70,255,.3);line-height:1.3}
 .app{position:relative;z-index:1;display:flex;height:100vh;gap:18px;padding:0;align-items:flex-start;justify-content:flex-end}
 .side{width:340px;min-height:170px;display:flex;flex-direction:column;gap:12px;background:rgba(22,38,29,.3);backdrop-filter:blur(10px);border:1px solid rgba(145,70,255,.2);border-radius:16px;padding:16px;box-shadow:0 10px 34px rgba(0,0,0,.35);overflow:visible}
@@ -70,7 +72,7 @@ html,body{margin:0;height:100%;padding:0;background:#0e0e10;color:var(--text);fo
 .pbtn:hover{background:rgba(145,70,255,.15);border-color:var(--accent)}
 .reset{width:100%;padding:9px;border-radius:10px;background:transparent;color:var(--accent);font-weight:700;font-size:12px;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:.2s;border:1px solid rgba(145,70,255,.3)}
 .reset:hover{background:rgba(145,70,255,.15);border-color:var(--accent)}
-.frame-wrap{width:calc(50vw - 22px);min-width:0;height:calc(100vh - 132px);margin:110px 22px 22px auto;border-radius:16px;overflow:hidden;background:rgba(22,38,29,.25);backdrop-filter:blur(10px);box-shadow:0 10px 34px rgba(0,0,0,.35),0 0 0 2px rgba(145,70,255,.3),0 0 20px rgba(145,70,255,.15);border:2px solid rgba(145,70,255,.4);position:relative}
+.frame-wrap{width:calc(50vw - 22px);min-width:0;height:calc(100vh - 132px);margin:110px 22px 22px auto;border-radius:16px;overflow:hidden;background:#0e0e10;backdrop-filter:blur(10px);box-shadow:0 10px 34px rgba(0,0,0,.35),0 0 0 2px rgba(145,70,255,.3),0 0 20px rgba(145,70,255,.15);border:2px solid rgba(145,70,255,.4);position:relative}
 .leaderboard{width:280px;min-height:170px;display:flex;flex-direction:column;gap:8px;background:rgba(22,38,29,.3);backdrop-filter:blur(10px);border:1px solid rgba(145,70,255,.2);border-radius:16px;padding:16px;box-shadow:0 10px 34px rgba(0,0,0,.35)}
 .leaderboard h3{margin:0 0 8px;color:var(--accent);font-size:12px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;text-align:center}
 .leaderboard-list{flex:1;overflow-y:auto;max-height:360px;display:flex;flex-direction:column;gap:4px}
@@ -106,11 +108,8 @@ html,body{margin:0;height:100%;padding:0;background:#0e0e10;color:var(--text);fo
 .password-hint{color:var(--muted);font-size:10px;text-align:center;margin-top:-8px}
 .frame-wrap::before{content:'';position:absolute;inset:0;border-radius:16px;padding:2px;background:linear-gradient(135deg,rgba(145,70,255,.5),transparent,rgba(145,70,255,.2));-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none}
 iframe{width:100%;height:100%;display:block;border:0;background:#000;opacity:0;pointer-events:none}
-.chat-overlay{position:absolute;top:0;left:0;right:0;bottom:0;display:flex;flex-direction:column;justify-content:flex-end;padding:10px;overflow-y:scroll;font-size:13px;line-height:1.5;background:#000;z-index:5}
-.chat-overlay::-webkit-scrollbar{width:6px}
-.chat-overlay::-webkit-scrollbar-thumb{background:var(--accent);border-radius:8px}
-.chat-overlay::-webkit-scrollbar-track{background:rgba(145,70,255,.08);border-radius:8px}
-.chat-overlay::-webkit-scrollbar-thumb:hover{background:#bf94ff}
+.chat-overlay{position:absolute;top:0;left:0;right:0;bottom:0;display:flex;flex-direction:column;justify-content:flex-end;padding:10px;overflow-y:auto;scrollbar-width:none;font-size:13px;line-height:1.5;background:#0e0e10;z-index:5}
+.chat-overlay::-webkit-scrollbar{display:none}
 .chat-msg{padding:4px 8px;border-bottom:1px solid rgba(145,70,255,.05);word-wrap:break-word}
 .chat-msg .nick{color:#fff;font-weight:700}
 .chat-badge{width:16px;height:16px;margin-right:3px;vertical-align:middle;border-radius:3px}
@@ -200,6 +199,7 @@ iframe{width:100%;height:100%;display:block;border:0;background:#000;opacity:0;p
 .welvol-overlay.open{display:block}
 .welvol-overlay iframe{position:absolute;inset:24px 24px 24px 24px;width:calc(100% - 48px);height:calc(100% - 48px);border:2px solid rgba(145,70,255,.4);border-radius:16px;background:#0e0f12;opacity:1;pointer-events:auto}
 .welvol-close{position:absolute;top:34px;right:34px;z-index:10;width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.1);border:1px solid rgba(145,70,255,.4);color:#fff;font-size:20px;cursor:pointer;transition:.2s}
+.welvol-overlay.inner-view-open .welvol-close{display:none}
 .welvol-close:hover{background:#f87171;color:#fff;transform:scale(1.1)}
 .twp-overlay{position:fixed;inset:0;z-index:5000;display:none;flex-direction:column;align-items:center;justify-content:center;background:rgba(10,10,12,.94);backdrop-filter:blur(16px);padding:24px}
 .twp-overlay.open{display:flex}
@@ -366,11 +366,7 @@ html.showing-winner body{overflow:hidden}
   </div>
   <div class="topbar-item">
     <label>СООБЩЕНИЙ</label>
-    <div class="topbar-count-row">
-      <button class="pick-btn" onclick="adjustMinMsgs(-1)">−</button>
-      <input type="number" id="minMsgs" value="1" min="1" oninput="saveMinMsgs()">
-      <button class="pick-btn" onclick="adjustMinMsgs(1)">+</button>
-    </div>
+    <input type="number" id="minMsgs" value="1" min="1" oninput="saveMinMsgs()">
   </div>
 </div>
 
@@ -648,8 +644,12 @@ var CORRECT_PASSWORD='a1a1';
   window.addEventListener('message',function(event){
     var frame=document.getElementById('welvolAppFrame');
     var data=event.data;
-    if(event.origin!==window.location.origin||!frame||event.source!==frame.contentWindow||
-       !data||data.type!=='welvol-twitch-oauth'||typeof data.clientId!=='string'||!data.clientId.trim())return;
+    if(event.origin!==window.location.origin||!frame||event.source!==frame.contentWindow||!data)return;
+    if(data.type==='welvol-inner-view'){
+      document.getElementById('welvolAppOverlay').classList.toggle('inner-view-open',data.open===true);
+      return;
+    }
+    if(data.type!=='welvol-twitch-oauth'||typeof data.clientId!=='string'||!data.clientId.trim())return;
 
     var scopes='user:read:email channel:read:redemptions channel:manage:redemptions chat:read chat:edit';
     var redirectUri=window.location.origin+window.location.pathname;
@@ -675,7 +675,6 @@ function getMinMsgs(){
   return minMsgs;
 }
 function saveMinMsgs(){getMinMsgs();updateMiddleHint();}
-function adjustMinMsgs(d){var inp=document.getElementById('minMsgs');inp.value=Math.max(1,(parseInt(inp.value)||1)+d);getMinMsgs();updateMiddleHint();}
 
 function getWinnersPick(){
   var inp=document.getElementById('winnersPick');
@@ -875,6 +874,7 @@ function openWelvolApp(){
 function closeWelvolApp(){
   var overlay=document.getElementById('welvolAppOverlay');
   overlay.classList.remove('open');
+  overlay.classList.remove('inner-view-open');
   overlay.setAttribute('aria-hidden','true');
   document.getElementById('openWelvolAppButton').focus();
 }
