@@ -1763,11 +1763,23 @@
     document.querySelector('.main-menu').classList.remove('hidden');
     document.getElementById('settingsFab').classList.add('active');
   };
-  window.notifyWelvolHostView = function(open){
+  window.notifyWelvolHostView = function(){
     if(window.parent!==window){
-      window.parent.postMessage({type:'welvol-inner-view',open:!!open},window.location.origin);
+      var overlayIds=['statsOverlay','rewardsOverlay','twOverlay','chatOverlay','wheelOverlay','numberWinOverlay'];
+      var isInnerViewOpen=overlayIds.some(function(id){
+        var overlay=document.getElementById(id);
+        return overlay&&overlay.classList.contains('active');
+      });
+      window.parent.postMessage({type:'welvol-inner-view',open:isInnerViewOpen},window.location.origin);
     }
   };
+  ['statsOverlay','rewardsOverlay','twOverlay','chatOverlay','wheelOverlay','numberWinOverlay'].forEach(function(id){
+    var overlay=document.getElementById(id);
+    if(overlay){
+      new MutationObserver(window.notifyWelvolHostView).observe(overlay,{attributes:true,attributeFilter:['class']});
+    }
+  });
+  window.notifyWelvolHostView();
   function openTwitch(){
     closeStatsIfOpen();
     closeRewards();
