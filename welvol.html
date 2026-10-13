@@ -22,7 +22,7 @@
   }
   *{box-sizing:border-box;margin:0;padding:0}
   body{background:var(--bg);color:var(--ink);font-family:var(--font);min-height:100vh}
-  #bgVideo{position:fixed;top:0;left:0;width:100%;height:100%;object-fit:cover;z-index:-2;pointer-events:none}
+  #bgVideo{position:fixed;inset:0;background:url('vix.png') center/cover no-repeat;z-index:-2;pointer-events:none}
   .bgfx{position:fixed;inset:0;z-index:-1;pointer-events:none;
     background:radial-gradient(55% 45% at 18% 0%,rgba(119,44,232,.25),transparent 60%),
                radial-gradient(50% 45% at 85% 10%,rgba(145,70,255,.12),transparent 60%)}
@@ -697,9 +697,7 @@
 /* test */</style>
 </head>
 <body>
-<video id="bgVideo" autoplay muted loop playsinline poster="">
-  <source src="fon.mp4" type="video/mp4" />
-</video>
+<div id="bgVideo" aria-hidden="true"></div>
 <div class="bgfx"></div>
 
 <!-- Flip-Timer -->
@@ -779,7 +777,7 @@
 <header class="topbar">
   <div class="topbar-in">
     <div class="logo">
-      <span class="author-credit">by: @webvad_bot</span>
+      <span class="author-credit"></span>
       <span class="logo-mark">
         <img src="icon1.png" alt="WheelBot" width="30" height="30" />
       </span>
@@ -1149,7 +1147,7 @@
   var arrowNickEl = document.getElementById('arrowNick');
   var elimBannerEl = document.getElementById('elimBanner');
   var wheelOverlay = document.getElementById('wheelOverlay');
-  var spinState = { spinning:false, rotation:0 };
+  var spinState = { spinning:false, rotation:0, generation:0 };
   var wheelMode = 'normal';      // 'normal' | 'elimination' | 'number'
   var spinDurationSec = 5;       // время вращения в секундах
   var eliminatedObjs = [];       // выбывшие в режиме «выбывание» (объекты участников, только с колеса)
@@ -1537,36 +1535,62 @@
     });
   })();
 
-  // РЕРОЛ — запрашиваем причину, сохраняем и крутим заново
+  // РЕРОЛ — сохраняем причину, исключаем прошлого победителя и крутим заново
   window.winnerReroll = function(){
-    var reason = 'Без причины';
-    if(lastResult){
-      try{
-        var rr = JSON.parse(localStorage.getItem('wheelbot_rerolls') || '[]');
-        if(!Array.isArray(rr)) rr = [];
-        rr.push({
-          nick: lastResult.nick,
-          points: lastResult.points || 0,
-          reason: reason,
-          time: new Date().toLocaleString()
-        });
-        localStorage.setItem('wheelbot_rerolls', JSON.stringify(rr));
-        var history = loadWinnerHistory();
-        history.push({
-          nick: String(lastResult.nick).toLowerCase(),
-          dep: '',
-          withdraw: '',
-          tg: '',
-          site: '',
-          status: 'rerolled',
-          reason: reason,
-          timestamp: new Date().toISOString()
-        });
-        localStorage.setItem(WINNER_HISTORY_KEY, JSON.stringify(history));
-        renderRecentWinners();
-      }catch(e){ console.error('Не удалось записать реролл:', e); }
+    if(!lastResult) return;
+    if(participants.length < 2){
+      alert('Для реролла нужно минимум два участника.');
+      return;
     }
-    winnerExit();
+    var rerolledParticipant = participants.find(function(p){
+      return String(p.nick).toLowerCase() === String(lastResult.nick).toLowerCase();
+    });
+    if(!rerolledParticipant){
+      alert('Участник уже удалён — реролл запустить нельзя.');
+      return;
+    }
+    var reason = prompt('Причина реролла:', 'Без причины');
+    if(reason === null) return;
+    reason = reason.trim() || 'Без причины';
+
+    try{
+      var rr = JSON.parse(localStorage.getItem('wheelbot_rerolls') || '[]');
+      if(!Array.isArray(rr)) rr = [];
+      rr.push({
+        nick: lastResult.nick,
+        points: lastResult.points || 0,
+        reason: reason,
+        time: new Date().toLocaleString()
+      });
+      localStorage.setItem('wheelbot_rerolls', JSON.stringify(rr));
+      var history = loadWinnerHistory();
+      history.push({
+        nick: String(lastResult.nick).toLowerCase(),
+        dep: '',
+        withdraw: '',
+        tg: '',
+        site: '',
+        status: 'rerolled',
+        reason: reason,
+        timestamp: new Date().toISOString()
+      });
+      localStorage.setItem(WINNER_HISTORY_KEY, JSON.stringify(history));
+      renderRecentWinners();
+    }catch(e){ console.error('Не удалось записать реролл:', e); }
+
+    closeWinnerScreen();
+    document.getElementById('resultPanel').classList.remove('active');
+    eliminatedObjs = [rerolledParticipant];
+    elimBannerEl.classList.remove('visible');
+    drawWheel();
+    updateArrowNick();
+    updateWheelControls();
+    var rerollCandidates = activeWheelParticipants();
+    if(rerollCandidates.length === 1){
+      showResultPanel(rerollCandidates[0], 100);
+      return;
+    }
+    spinWheel();
   };
 
   // ВЫХОД — закрываем экран победителя и рулетку, открываем главное меню
@@ -1631,10 +1655,10 @@
       return values;
     };
     var controller = window.AbortController ? new AbortController() : null;
-    var timer = setTimeout(function(){ if(controller) controller.abort(); }, 5000);
+    var timer;
     var url = 'https://www.random.org/integers/?num=' + count
       + '&min=0&max=' + (max - 1) + '&col=1&base=10&format=plain&rnd=new';
-    return fetch(url, { cache:'no-store', signal: controller ? controller.signal : undefined })
+    var request = fetch(url, { cache:'no-store', signal: controller ? controller.signal : undefined })
       .then(function(response){
         if(!response.ok) throw new Error('random.org HTTP ' + response.status);
         return response.text();
@@ -1643,7 +1667,14 @@
         var values = text.trim().split(/\s+/).map(function(value){ return parseInt(value, 10); });
         if(values.length !== count || values.some(function(value){ return isNaN(value); })) throw new Error('Invalid random.org response');
         return values;
-      })
+      });
+    var timeout = new Promise(function(resolve, reject){
+      timer = setTimeout(function(){
+        if(controller) controller.abort();
+        reject(new Error('random.org request timed out'));
+      }, 5000);
+    });
+    return Promise.race([request, timeout])
       .catch(function(error){
         console.warn('random.org недоступен, использую локальную случайность:', error);
         return fallback();
@@ -1655,8 +1686,10 @@
     if(wheelMode === 'number'){
       if(spinState.spinning) return;
       spinState.spinning = true;
+      var numberSpinGeneration = ++spinState.generation;
       updateWheelControls();
       setTimeout(function(){
+        if(numberSpinGeneration !== spinState.generation) return;
         generateNumber();
         spinState.spinning = false;
         updateWheelControls();
@@ -1666,6 +1699,7 @@
     var list = activeWheelParticipants();
     if(spinState.spinning || list.length < 2) return;
     spinState.spinning = true; updateWheelControls();
+    var spinGeneration = ++spinState.generation;
     spinBtn.textContent = 'Получаем случайность…';
     elimBannerEl.classList.remove('visible');
     // Веса должны совпадать с нарисованными секторами:
@@ -1673,6 +1707,7 @@
     var pts = wheelWeights(list);
     var total = pts.reduce(function(a,b){ return a+b; }, 0);
     getRandomValues(3).then(function(randomValues){
+      if(spinGeneration !== spinState.generation) return;
       var randomUnit = function(value){ return value / 1000000000; };
       var roll = randomUnit(randomValues[0])*total, idxWin=0, acc=0;
       for(var i=0;i<pts.length;i++){ acc+=pts[i]; if(roll<acc){ idxWin=i; break; } }
@@ -1688,6 +1723,7 @@
       var current=spinState.rotation, totalMove=target-current;
       var t0=null, DUR=spinDurationSec*1000;
       function frame(ts){
+      if(spinGeneration !== spinState.generation) return;
       if(t0===null) t0=ts;
       var p=Math.min(1,(ts-t0)/DUR), ease=1-Math.pow(1-p,3);
       spinState.rotation=current+totalMove*ease; drawWheel(); updateArrowNick();
@@ -1853,6 +1889,10 @@
     setWheelMode('number');
   }
   function closeWheel(){
+    spinState.generation++;
+    spinState.spinning = false;
+    var winnerScreen = document.getElementById('winnerScreen');
+    if(winnerScreen.classList.contains('active') && window.closeWinnerScreen) window.closeWinnerScreen();
     document.getElementById('wheelOverlay').classList.remove('active');
     document.getElementById('resultPanel').classList.remove('active');
     document.getElementById('winnerScreen').classList.remove('active');
@@ -1860,6 +1900,7 @@
     document.getElementById('numberFab').classList.remove('active');
     stopNumberGuessing();
     updateNumberChat(false);
+    updateWheelControls();
     window.showMainSettings();
   }
 
