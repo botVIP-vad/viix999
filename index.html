@@ -308,7 +308,6 @@ html,body{margin:0;height:100%;padding:0;overflow:hidden;background:#0e0e10;colo
 .stat-item .time{color:var(--text);font-size:12px}
 
 /* WINNER SCREEN MODAL STYLES */
-.winner-modal-content{flex-direction:column;width:620px;height:calc(100vh - 110px);max-height:none;border-radius:16px;background:var(--bg);padding:16px;border:2px solid rgba(145,70,255,.4);box-shadow:0 10px 40px rgba(0,0,0,.55);position:relative}
 .winner-modal-content{flex-direction:column;width:820px;max-width:96vw;height:calc(100vh - 90px);max-height:760px;border-radius:16px;background:var(--bg);padding:16px;border:2px solid rgba(145,70,255,.4);box-shadow:0 10px 40px rgba(0,0,0,.55);position:relative}
 html.showing-winner{overflow:hidden}
 html.showing-winner body{overflow:hidden}
@@ -325,7 +324,6 @@ html.showing-winner body{overflow:hidden}
 #reroll-counter-display{color:var(--accent);font-size:11px;font-weight:bold;margin-top:3px}
 #win-timer-label{border:1px solid rgba(145,70,255,.3);padding:6px 14px;border-radius:14px;color:var(--accent);font-size:16px;font-family:'Orbitron',monospace;flex-shrink:0;background:rgba(145,70,255,.05)}
 #win-timer-label.timer-responded{color:#bf94ff;background:rgba(145,70,255,.2);border-color:rgba(145,70,255,.4);box-shadow:0 0 25px rgba(145,70,255,.5)}
-.win-grid{display:flex;flex-direction:column;gap:10px;flex:1 1 0;min-height:0;margin-top:10px;overflow:hidden}
 .win-grid{display:grid;grid-template-columns:1.2fr 0.8fr;gap:12px;flex:1 1 0;min-height:0;margin-top:10px;overflow:hidden}
 @media(max-width:768px){
   .winner-modal-content{width:96vw;height:calc(100vh - 40px);max-height:none}
@@ -333,7 +331,6 @@ html.showing-winner body{overflow:hidden}
 }
 .win-card{flex:1 1 0;min-height:0;background:rgba(24,24,27,.8);border:1px solid rgba(145,70,255,.12);border-radius:18px;padding:10px;display:flex;flex-direction:column;overflow:hidden}
 .win-card h4{margin-top:0;color:var(--accent);font-size:10px;text-transform:uppercase;letter-spacing:1px}
-#win-chat-history{display:block;flex:1;width:100%;min-height:0;border:0;border-radius:10px;background:transparent}
 
 /* TWITCH VIEWER CARD STYLES */
 .vc-container{background:#18181b !important;border:1px solid rgba(145,70,255,.3) !important;box-shadow:0 4px 20px rgba(0,0,0,.4);display:flex;flex-direction:column;padding:10px;gap:8px;overflow:hidden}
@@ -370,6 +367,16 @@ html.showing-winner body{overflow:hidden}
 .vc-msg-text{color:#efeff1;font-size:11px}
 .vc-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;color:var(--muted);font-size:11px;text-align:center;padding:16px;gap:6px}
 .win-response-msg{background:rgba(145,70,255,.08) !important;border-left:3px solid var(--accent);border-radius:10px;padding:4px 8px !important;margin:3px 0 !important}
+.win-msg-row{padding:8px 10px;background:rgba(255,255,255,.03);border:1px solid rgba(145,70,255,.12);border-left:3px solid var(--accent);border-radius:8px;font-size:13px;line-height:1.4;word-break:break-word}
+.win-msg-time{color:var(--muted);font-size:11px;font-family:monospace;margin-right:6px}
+.win-msg-nick{color:var(--accent);font-weight:800;margin-right:6px}
+.win-msg-text{color:#fff;font-weight:500}
+.win-response-msg{background:rgba(145,70,255,.2) !important;border-left:3px solid #bf94ff !important;box-shadow:0 0 12px rgba(145,70,255,.3)}
+.btn-tw-card{background:rgba(145,70,255,.15);border:1px solid rgba(145,70,255,.35);color:#bf94ff;border-radius:6px;padding:3px 8px;font-size:10px;font-weight:800;cursor:pointer;transition:.2s}
+.btn-tw-card:hover{background:var(--accent);color:#0e0e10}
+#win-chat-history{display:flex;flex-direction:column;gap:6px;overflow-y:auto;flex-grow:1;min-height:0}
+#win-chat-history::-webkit-scrollbar{width:5px}
+#win-chat-history::-webkit-scrollbar-thumb{background:var(--accent);border-radius:8px}
 .win-stats-row{display:flex;gap:10px;margin-bottom:6px}
 .win-stat-item{padding:4px 0}
 .win-stat-item small{color:var(--muted);font-size:9px;text-transform:uppercase}
@@ -656,8 +663,6 @@ html.showing-winner body{overflow:hidden}
       </div>
     </div>
     <div class="win-grid">
-      <div class="win-card">
-        <iframe id="win-chat-history" title="Twitch viewer card for winner" loading="lazy"></iframe>
       <div class="win-card vc-container" id="win-viewercard-card">
         <!-- КАРТОЧКА ЗРИТЕЛЯ TWITCH -->
         <div class="vc-header">
@@ -670,6 +675,12 @@ html.showing-winner body{overflow:hidden}
               <button type="button" class="vc-btn" onclick="openTwitchPopoutCard()" title="Открыть всплывающую карточку Twitch">TWITCH ↗</button>
               <button type="button" class="vc-btn" onclick="openFollowageLink()" title="Проверить подписки на showmasterokda">FOLLOWAGE 🔗</button>
             </div>
+      <div class="win-card" id="win-chat-card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid rgba(145,70,255,0.15);flex-shrink:0;">
+          <h4 style="margin:0;color:var(--accent);font-size:11px;text-transform:uppercase;letter-spacing:1px;">Сообщения в этом стриме:</h4>
+          <div style="display:flex;align-items:center;gap:6px;">
+            <span id="win-msg-count-badge" style="font-size:10px;font-weight:700;color:var(--muted);background:rgba(145,70,255,0.1);border:1px solid rgba(145,70,255,0.25);padding:2px 8px;border-radius:10px;">0 сообщ.</span>
+            <button type="button" class="btn-tw-card" onclick="openTwitchViewerCard()" title="Открыть карточку зрителя на Twitch">TWITCH ↗</button>
           </div>
           
           <div class="vc-user-row">
@@ -706,6 +717,7 @@ html.showing-winner body{overflow:hidden}
           </div>
           <div id="win-chat-history" class="vc-messages-list"></div>
         </div>
+        <div id="win-chat-history"></div>
       </div>
       <div id="win-stat-card" class="win-card">
         <h4>История игрока (Global):</h4>
@@ -758,6 +770,7 @@ html.showing-winner body{overflow:hidden}
 var CH='viix999';
 var code=localStorage.getItem('viix999_code')||'';
 var parts=new Set(JSON.parse(localStorage.getItem('viix999_parts')||'[]'));
+var userMessages={};
 var sock=null;
 var timerSeconds=600,timerRunning=false,timerFrame=null,timerEndTime=0,remainingOnPause=600;
 var passwordModal=document.getElementById('passwordModal');
@@ -1749,8 +1762,16 @@ var userEntryMatches={};
 var rerollCount=0;
 var winnerResultSaved=false;
 
+function openTwitchViewerCard(){
+  if(!currentWinner)return;
+  var ch=(CH||'viix999').toLowerCase();
+  var url='https://www.twitch.tv/popout/'+encodeURIComponent(ch)+'/viewercard/'+encodeURIComponent(currentWinner)+'?popout=';
+  window.open(url,'_blank');
+}
+
 function getUserMessagesList(name){
   if(!name)return[];
+  if(userMessages[name]&&Array.isArray(userMessages[name])&&userMessages[name].length)return userMessages[name];
   var key=name.toLowerCase();
   if(userMessages[key]&&userMessages[key].length)return userMessages[key];
   for(var k in userMessages){
@@ -1789,6 +1810,7 @@ function formatViewerCardMessageHtml(m){
 }
 
 function appendWinnerCardLiveMessage(m){
+function renderWinnerChatHistory(name){
   var cont=document.getElementById('win-chat-history');
   if(!cont)return;
   var empty=cont.querySelector('.vc-empty');
@@ -1805,11 +1827,6 @@ function appendWinnerCardLiveMessage(m){
 }
 
 function renderWinnerChatHistory(name){
-  var viewerCard=document.getElementById('win-chat-history');
-  if(!viewerCard)return;
-  var parent=location.hostname||'localhost';
-  viewerCard.src='https://www.twitch.tv/popout/'+encodeURIComponent(CH.toLowerCase())
-    +'/viewercard/'+encodeURIComponent(name)+'?popout=&parent='+encodeURIComponent(parent);
   if(!name)return;
   var cont=document.getElementById('win-chat-history');
   var avatar=document.getElementById('vc-avatar');
@@ -1876,10 +1893,14 @@ function renderWinnerChatHistory(name){
 
   var msgs=getUserMessagesList(name);
   if(msgsCount)msgsCount.innerText=msgs.length;
+  var cntBadge=document.getElementById('win-msg-count-badge');
+  if(cntBadge)cntBadge.innerText=msgs.length+' сообщ.';
 
   if(!cont)return;
   if(msgs.length===0){
     cont.innerHTML='<div class="vc-empty"><div style="font-size:22px">💬</div><div>В этой сессии стрима сообщений от <b>'+esc(name)+'</b> пока нет</div><div style="font-size:9px;opacity:.7">Новые сообщения от победителя появятся здесь автоматически</div></div>';
+  if(!msgs||msgs.length===0){
+    cont.innerHTML='<div style="color:var(--muted);text-align:center;padding:30px 10px;font-size:12px;">Сообщений в чате от '+esc(name)+' пока нет</div>';
     return;
   }
 
@@ -1888,6 +1909,12 @@ function renderWinnerChatHistory(name){
   }).join('');
 
   cont.scrollTop=cont.scrollHeight;
+    return'<div class="win-msg-row">'+
+      '<span class="win-msg-time">'+esc(m.time)+'</span> '+
+      '<span class="win-msg-nick">'+esc(m.user||name)+':</span> '+
+      '<span class="win-msg-text">'+esc(m.text)+'</span>'+
+    '</div>';
+  }).reverse().join('');
 }
 
 // ===== ОБЪЕДИНЁННАЯ СТАТИСТИКА: vix + welvol =====
@@ -2027,7 +2054,6 @@ function finishCloseWinner(){
   currentSession=null;
   winnerResultSaved=false;
   var viewerCard=document.getElementById('win-chat-history');
-  if(viewerCard)viewerCard.src='about:blank';
   if(viewerCard){if(viewerCard.tagName==='IFRAME')viewerCard.src='about:blank';else viewerCard.innerHTML='';}
 }
 function closeWinnerScreen(){
@@ -2044,32 +2070,26 @@ function closeModals(){
   winTimerActive=false;
   clearInterval(window.winInt);
   var viewerCard=document.getElementById('win-chat-history');
-  if(viewerCard)viewerCard.src='about:blank';
   if(viewerCard){if(viewerCard.tagName==='IFRAME')viewerCard.src='about:blank';else viewerCard.innerHTML='';}
 }
 
 document.addEventListener('keydown',function(e){if(e.key==='Escape'){closeModals();closeWheel();var wo=document.getElementById('welvolOverlay');if(wo&&wo.classList.contains('open'))closeWelvolScreen();closeWelvolApp();}});
 
 // ===== TWITCH BADGES (per IRC tags docs: badges=broadcaster/1,subscriber/12,...) =====
-// Иконки берём напрямую с CDN Twitch по известным UUID глобальных бейджей
 var staticBadges={
   'broadcaster':'5527c58c-fb7d-422d-b71b-f309dcb85cc1',
   'moderator':'3267646d-33f0-4b17-b3df-f923a41db1d0',
   'vip':'b817bbc4-3b98-45cd-84dc-4e46a4e045ed',
-  'premium':'a1c876cb-47eb-4c61-89e1-11a3d9a44b3c'
   'premium':'a1c876cb-47eb-4c61-89e1-11a3d9a44b3c',
   'turbo':'bd444ec6-8094-46eb-aca7-217754000da8',
   'partner':'d12a2e27-16f6-41d0-ab77-b780518f00a3'
 };
 function badgeUrl(name,ver){
-  if(staticBadges[name])return'https://static-cdn.jtvnw.net/badges/v1/'+staticBadges[name]+'/3';
-  if(name==='subscriber')return'https://static-cdn.jtvnw.net/badges/v1/5d9f2208-5dd8-11e7-ab5b-b4d975e5e2e4/3';
   if(staticBadges[name])return'https://static-cdn.jtvnw.net/badges/v1/'+staticBadges[name]+'/2';
   if(name==='subscriber')return'https://static-cdn.jtvnw.net/badges/v1/5d9f2208-5dd8-11e7-ab5b-b4d975e5e2e4/2';
   return null;
 }
 function renderBadgesHtml(badgesStr){
-  return'';
   if(!badgesStr)return'';
   return badgesStr.split(',').map(function(item){
     var p=item.split('/')[0];
@@ -2078,6 +2098,8 @@ function renderBadgesHtml(badgesStr){
     return'';
   }).join('');
 }
+function badgeUrl(name,ver){return null;}
+function renderBadgesHtml(badgesStr){return'';}
 
 function chatStatus(txt,cls){console.log('[CHAT]',txt);}
 
@@ -2181,7 +2203,6 @@ function connect(){
     var msgId=tags['id']||null;
 
     if(!userMessages[user])userMessages[user]=[];
-    userMessages[user].push({time:time,text:msg,id:msgId,login:userLogin});
     var userBadges=tags['badges']||'';
     var userColor=tags['color']||'#bf94ff';
     var msgObj={time:time,text:msg,id:msgId,login:userLogin,user:user,badges:userBadges,color:userColor};
@@ -2193,6 +2214,7 @@ function connect(){
       color:userColor,
       lastSeen:time
     };
+    userMessages[user].push({time:time,text:msg,id:msgId,login:userLogin,user:user});
     var messageMatchesCode=msg.trim().toLowerCase()===code.toLowerCase();
     if(filterState.ALL||messageMatchesCode)userEntryMatches[user]=true;
     var hasEntry=userEntryMatches[user]&&(filterState.ACTIVE||filterState.ALL||messageMatchesCode);
@@ -2200,8 +2222,8 @@ function connect(){
       parts.add(user);
       render();
     }
-    renderChatMessage(user,msg,time,msgId,tags['badges'],tags['color']);
     renderChatMessage(user,msg,time,msgId,userBadges,userColor);
+    renderChatMessage(user,msg,time,msgId,'',tags['color']);
     renderParticipantsCount();
     if(document.getElementById('modal').classList.contains('open'))renderModal();
 
@@ -2216,6 +2238,23 @@ function connect(){
       winnerResponded=true;
       if(currentSession)currentSession.endTime=Date.now();
       appendWinnerCardLiveMessage(msgObj);
+
+      var historyCont=document.getElementById('win-chat-history');
+      if(historyCont){
+        if(historyCont.innerHTML.indexOf('пока нет')>=0)historyCont.innerHTML='';
+        var newMsg=document.createElement('div');
+        newMsg.className='win-msg-row win-response-msg';
+        newMsg.innerHTML='<span class="win-msg-time">'+esc(time)+'</span> '+
+          '<span class="win-msg-nick">'+esc(user)+':</span> '+
+          '<span class="win-msg-text">'+esc(msg)+'</span>';
+        historyCont.insertBefore(newMsg,historyCont.firstChild);
+        historyCont.scrollTop=0;
+        var cntBadge=document.getElementById('win-msg-count-badge');
+        if(cntBadge){
+          var curCnt=parseInt(cntBadge.innerText)||0;
+          cntBadge.innerText=(curCnt+1)+' сообщ.';
+        }
+      }
     }
     winnerMessages.push({user:user,msg:msg,isWinner:currentWinner&&user.toLowerCase()===currentWinner.toLowerCase()});
   };
