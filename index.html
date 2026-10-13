@@ -1831,9 +1831,32 @@ function dailyMessagesForUser(name){
   });
 }
 
+// Данные с карточки зрителя Twitch для текущего победителя.
+// {name, count, messages:[{time,text,display,login}], source:'twitch'|'error', error}
+var vcWinnerData=null;
+
+// Время сообщения из ISO (sentAt) -> локальное ЧЧ:ММ:СС как в архивe.
+function vcMsgTime(iso){
+  var d=new Date(iso);
+  if(isNaN(d.getTime()))return '';
+  return d.toLocaleTimeString('ru-RU');
+}
+
 function renderWinnerChatHistory(name){
   var history=document.getElementById('win-chat-history');
   if(!history)return;
+  // Если подтянули сообщения с карточки зрителя Twitch — показываем их.
+  if(vcWinnerData&&vcWinnerData.source==='twitch'&&String(vcWinnerData.name).toLowerCase()===String(name||'').toLowerCase()){
+    if(!vcWinnerData.messages.length){
+      history.innerHTML='<div style="color:var(--muted);text-align:center;padding:14px;font-size:11px">На карточке зрителя Twitch за сегодня сообщений нет</div>';
+      return;
+    }
+    history.innerHTML=vcWinnerData.messages.map(function(m){
+      return winnerMsgHtml(m.display||name,vcMsgTime(m.time),m.text);
+    }).reverse().join('');
+    return;
+  }
+  // Иначе — локальный архив (сообщения, что видел бот).
   history.innerHTML=dailyMessagesForUser(name).map(function(message){
     return winnerMsgHtml(message.user||name,message.time,message.text);
   }).reverse().join('');
@@ -1903,7 +1926,9 @@ function showWinner(name){
   if(si)si.value='---';
   renderWinnerHistory(name);
   document.getElementById('winner-screen').classList.add('open');
-  renderWinnerChatHistory(name);
+  vcWinnerData=null;              // сбрасываем прошлые данные карточки зрителя
+  renderWinnerChatHistory(name);  // сразу показываем локальный архив
+  refreshWinnerViewerCard();      // затем подтягиваем счётчик с карточки зрителя Twitch
   var s=0;
   clearInterval(window.winInt);
   window.winInt=setInterval(function(){
@@ -1919,11 +1944,38 @@ function showWinner(name){
 function updateWinMsgCount(){
   var el=document.getElementById('win-msg-count');
   if(!el)return;
-  var messages=currentWinner?dailyMessagesForUser(currentWinner):[];
-  el.textContent='Сообщений сегодня: '+messages.length;
+  // Если есть данные с карточки зрителя Twitch для текущего победителя — берём их.
+  if(vcWinnerData&&vcWinnerData.source==='twitch'&&currentWinner
+     &&String(vcWinnerData.name).toLowerCase()===String(currentWinner).toLowerCase()){
+    el.textContent='Сообщений сегодня (Twitch): '+vcWinnerData.count;
+  }else{
+    var messages=currentWinner?dailyMessagesForUser(currentWinner):[];
+    el.textContent='Сообщений сегодня: '+messages.length;
+  }
   if(currentWinner&&document.getElementById('winner-screen').classList.contains('open')){
     renderWinnerChatHistory(currentWinner);
   }
+}
+
+// Обновить счётчик/список сообщений победителя с карточки зрителя Twitch.
+// Пока идёт загрузка — показываем "загрузка…". При ошибке — остаёмся на локальном архиве.
+function refreshWinnerViewerCard(){
+  var el=document.getElementById('win-msg-count');
+  var btn=document.getElementById('win-vc-refresh');
+  if(!currentWinner)return;
+  if(btn)btn.classList.add('loading');
+  if(el&&!vcWinnerData)el.textContent='Сообщений сегодня: загрузка…';
+  vcFetchToday(currentWinner,function(res){
+    if(btn)btn.classList.remove('loading');
+    if(res.source==='twitch'){
+      vcWinnerData={name:currentWinner,count:res.count,messages:res.messages,source:'twitch',error:null};
+    }else{
+      // Ошибка доступа — оставляем локальный архив, но запоминаем причину для подсказки.
+      vcWinnerData={name:currentWinner,count:0,messages:[],source:'error',error:res.error};
+      if(el)el.title=res.error||'';
+    }
+    updateWinMsgCount();
+  });
 }
 
 function winnerCooldownInfo(name){
