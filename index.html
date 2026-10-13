@@ -324,6 +324,10 @@ html.showing-winner body{overflow:hidden}
 .close-x{position:absolute;right:14px;top:6px;font-size:22px;color:var(--accent);cursor:pointer;transition:.3s;z-index:10}
 .close-x:hover{transform:scale(1.2);text-shadow:0 0 15px var(--accent)}
 .win-msg-count{color:var(--accent);font-weight:800;font-size:12px;letter-spacing:.5px;background:rgba(145,70,255,.08);border:1px solid rgba(145,70,255,.3);border-radius:10px;padding:4px 10px;pointer-events:none;text-align:center;margin-top:6px}
+.win-vc-refresh{flex-shrink:0;width:26px;height:26px;border-radius:8px;background:rgba(145,70,255,.12);border:1px solid rgba(145,70,255,.4);color:var(--accent);font-size:14px;font-weight:800;cursor:pointer;transition:.25s;line-height:1;display:flex;align-items:center;justify-content:center}
+.win-vc-refresh:hover{background:var(--accent);color:#fff;transform:rotate(180deg)}
+.win-vc-refresh.loading{opacity:.5;pointer-events:none;animation:vixspin 1s linear infinite}
+@keyframes vixspin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
 .win-timer-col{display:flex;flex-direction:column;align-items:center;flex-shrink:0}
 .win-header-block{display:flex;justify-content:space-between;align-items:center;gap:14px;transition:.5s}
 .win-header-center{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
@@ -628,7 +632,10 @@ html.showing-winner body{overflow:hidden}
       </div>
       <div class="win-timer-col">
         <div id="win-timer-label">00:00:00</div>
-        <div id="win-msg-count" class="win-msg-count">Сообщений сегодня: 0</div>
+        <div style="display:flex;align-items:center;gap:6px;margin-top:6px">
+          <div id="win-msg-count" class="win-msg-count" style="margin-top:0">Сообщений сегодня: 0</div>
+          <button id="win-vc-refresh" class="win-vc-refresh" type="button" title="Обновить с карточки зрителя Twitch" onclick="refreshWinnerViewerCard()">⟳</button>
+        </div>
       </div>
     </div>
     <div class="win-grid">
@@ -1030,7 +1037,7 @@ var TWP_PART_KEY='viix999_points_participants';
 var TWP_PURCH_KEY='viix999_points_purchases';
 var TWP_PROCESSED_KEY='viix999_points_processed';
 var TWITCH_API='https://api.twitch.tv/helix';
-var TWITCH_SCOPES='user:read:email channel:read:redemptions channel:manage:redemptions';
+var TWITCH_SCOPES='user:read:email channel:read:redemptions channel:manage:redemptions moderator:read:chat_messages';
 var twAuth={accessToken:'',clientId:'',user:null};
 var twPointParticipants=[];
 var twPurchases=[];
@@ -1056,6 +1063,116 @@ function twSavePurchases(){try{localStorage.setItem(TWP_PURCH_KEY,JSON.stringify
 function twHeaders(){return{'Client-ID':twAuth.clientId,'Authorization':'Bearer '+twAuth.accessToken,'Content-Type':'application/json'};}
 function twIsAuthed(){return !!(twAuth.accessToken&&twAuth.clientId&&twAuth.user);}
 function twBroadcasterId(){return twAuth.user?twAuth.user.id:null;}
+
+// ===== КАРТОЧКА ЗРИТЕЛЯ TWITCH (viewercard) — сообщения за сегодня =====
+// Берём количество сообщений пользователя за сегодня прямо с карточки зрителя
+// Twitch (как на https://www.twitch.twitch/popout/<канал>/viewercard/<ник>).
+// Требуется вход через Twitch аккаунтом-модератором канала (кнопка TWITCH).
+var TW_GQL='https://gql.twitch.tv/gql';
+var TW_GQL_INTEGRITY='https://gql.twitch.tv/integrity';
+var VC_CLIENT_ID_KEY='viix999_viewercard_clientid';
+var VC_INTEGRITY_KEY='viix999_viewercard_integrity';
+var VC_USERID_CACHE_KEY='viix999_viewercard_userids';
+var VC_QUERY='query ViewerCardModLogsMessagesBySender($channelID: ID!, $targetID: ID!, $cursor: Cursor){ viewerCardModLogs(channelID: $channelID, targetID: $targetID){ messages(first: 100, after: $cursor){ ... on ViewerCardModLogsMessagesConnection { pageInfo { hasNextPage endCursor } edges { cursor node { ... on ViewerCardModLogsChatMessage { id sentAt content { text } sender { login displayName } } } } } } } } }';
+var vcIntegrity={token:'',expires:0};
+var vcUserIdCache={};
+try{vcUserIdCache=JSON.parse(localStorage.getItem(VC_USERID_CACHE_KEY)||'{}')||{};}catch(e){vcUserIdCache={};}
+
+// Client-ID для запросов карточки (веб-клиент Twitch либо введённый при входе).
+function vcClientId(){return twAuth.clientId||localStorage.getItem(VC_CLIENT_ID_KEY)||'kimne78kx3ncx6brgo4mv6wki5h1ko';}
+
+// Client-Integrity токен (нужен для внутреннего GQL Twitch). Кэшируется.
+function vcGetIntegrity(){
+  return new Promise(function(resolve){
+    var now=Date.now();
+    if(vcIntegrity.token&&vcIntegrity.expires-60000>now){resolve(vcIntegrity.token);return;}
+    fetch(TW_GQL_INTEGRITY,{method:'POST',headers:{'Client-ID':vcClientId()}})
+      .then(function(r){if(!r.ok)throw new Error('integrity HTTP '+r.status);return r.json();})
+      .then(function(j){
+        if(j&&j.token){
+          vcIntegrity={token:j.token,expires:Number(j.expiration)||(now+60*60*1000)};
+          try{localStorage.setItem(VC_INTEGRITY_KEY,JSON.stringify(vcIntegrity));}catch(e){}
+        }
+        resolve(vcIntegrity.token||'');
+      })
+      .catch(function(){resolve('');});
+  });
+}
+
+// Логин -> числовой user ID (официальный Helix API). Результат кэшируется.
+function vcUserId(login){
+  var key=String(login||'').toLowerCase();
+  if(vcUserIdCache[key])return Promise.resolve(vcUserIdCache[key]);
+  return fetch(TWITCH_API+'/users?login='+encodeURIComponent(key),{headers:twHeaders()})
+    .then(function(r){if(!r.ok)throw new Error('users HTTP '+r.status);return r.json();})
+    .then(function(j){
+      if(j&&j.data&&j.data.length){
+        vcUserIdCache[key]=j.data[0].id;
+        try{localStorage.setItem(VC_USERID_CACHE_KEY,JSON.stringify(vcUserIdCache));}catch(e){}
+        return j.data[0].id;
+      }
+      throw new Error('Пользователь не найден: '+login);
+    });
+}
+
+// ASCII-логин победителя из локального архива (display-name может быть кириллицей).
+function vcLoginFor(name){
+  var target=String(name||'').toLowerCase();
+  ensureDailyChatArchive();
+  for(var i=dailyChatArchive.length-1;i>=0;i--){
+    var m=dailyChatArchive[i];
+    if(String(m.user||'').toLowerCase()===target&&m.login)return m.login;
+  }
+  if(userMessages[name]&&userMessages[name][0]&&userMessages[name][0].login)return userMessages[name][0].login;
+  if(/^[a-zA-Z0-9_]+$/.test(name))return name.toLowerCase();
+  return null;
+}
+
+// Тянуть сообщения зрителя за сегодня с карточки Twitch.
+// callback({count, messages, source, error}); source: 'twitch' | 'error'
+function vcFetchToday(name,callback){
+  if(!name){callback({count:0,messages:[],source:'error',error:'нет ника'});return;}
+  if(!twIsAuthed()){callback({count:0,messages:[],source:'error',error:'Нужен вход через Twitch (модератор канала)'});return;}
+  var login=vcLoginFor(name);
+  if(!login){callback({count:0,messages:[],source:'error',error:'Не удалось определить логин зрителя'});return;}
+  var channelLogin=String(CH||'').toLowerCase();
+  Promise.all([vcUserId(channelLogin),vcUserId(login),vcGetIntegrity()])
+    .then(function(res){
+      var channelID=res[0],targetID=res[1],integrity=res[2];
+      var headers={'Client-ID':twAuth.clientId,'Authorization':'Bearer '+twAuth.accessToken,'Content-Type':'application/json'};
+      if(integrity)headers['Client-Integrity']=integrity;
+      var all=[];
+      var cursor=null,pages=0;
+      function page(){
+        return fetch(TW_GQL,{method:'POST',headers:headers,body:JSON.stringify({operationName:'ViewerCardModLogsMessagesBySender',query:VC_QUERY,variables:{channelID:channelID,targetID:targetID,cursor:cursor}})})
+          .then(function(r){return r.json();})
+          .then(function(j){
+            if(j&&j.errors&&j.errors.length&&!j.data){throw new Error(j.errors.map(function(e){return e.message;}).join('; '));}
+            var conn=j&&j.data&&j.data.viewerCardModLogs&&j.data.viewerCardModLogs.messages;
+            if(!conn||!conn.edges){throw new Error('Нет доступа к карточке (нужны права модератора)');}
+            conn.edges.forEach(function(e){
+              var n=e&&e.node;
+              if(n&&n.sentAt){all.push({time:n.sentAt,text:(n.content&&n.content.text)||'',login:(n.sender&&n.sender.login)||login,display:(n.sender&&n.sender.displayName)||name});}
+            });
+            var hasNext=conn.pageInfo&&conn.pageInfo.hasNextPage;
+            cursor=conn.pageInfo?conn.pageInfo.endCursor:null;
+            pages++;
+            if(hasNext&&cursor&&pages<20){return page();}
+            return all;
+          });
+      }
+      return page();
+    })
+    .then(function(all){
+      var start=new Date();start.setHours(0,0,0,0);
+      var today=all.filter(function(m){return new Date(m.time).getTime()>=start.getTime();});
+      today.sort(function(a,b){return new Date(a.time)-new Date(b.time);});
+      callback({count:today.length,messages:today,source:'twitch',error:null});
+    })
+    .catch(function(err){
+      callback({count:0,messages:[],source:'error',error:(err&&err.message)||String(err)});
+    });
+}
 
 (function(){
   // Обработка возврата OAuth (#access_token=...)
