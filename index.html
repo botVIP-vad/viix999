@@ -674,7 +674,11 @@ function getMinMsgs(){
   if(minMsgs!==v){minMsgs=v;localStorage.setItem('viix999_minmsgs',minMsgs);}
   return minMsgs;
 }
-function saveMinMsgs(){getMinMsgs();updateMiddleHint();}
+function saveMinMsgs(){
+  getMinMsgs();
+  updateMiddleHint();
+  refreshParticipantViews();
+}
 
 function getWinnersPick(){
   var inp=document.getElementById('winnersPick');
@@ -712,7 +716,7 @@ function saveFilters(){
     filterState[k]=el?!!el.checked:false;
   });
   try{localStorage.setItem('viix999_filters',JSON.stringify(filterState));}catch(e){}
-  renderParticipantsCount();
+  refreshParticipantViews();
   updateMiddleHint();
 }
 
@@ -726,13 +730,24 @@ function userMsgCount(name){
   return m?m.length:0;
 }
 
+function requiredParticipantMessages(){
+  return Math.max(getMinMsgs(),filterState.ACTIVE?5:1);
+}
+
 function filterCandidates(arr){
   return arr.filter(function(name){
+    if(userMsgCount(name)<requiredParticipantMessages())return false;
     if(filterState.FM&&userMsgCount(name)>1)return false;
     if(filterState.GLOBAL&&userHasRealWin(name))return false;
     if(filterState.ACTIVE&&userMsgCount(name)<5)return false;
     return true;
   });
+}
+
+function refreshParticipantViews(){
+  renderParticipantsCount();
+  renderModal();
+  renderChatOverlay();
 }
 
 function chooseWinners(){
@@ -1317,7 +1332,7 @@ var MAX_CHAT_MSGS=200;
 
 function renderChatOverlay(){
   chatOverlay.innerHTML=chatMessages.map(function(m){
-    var isParticipant=parts.has(m.user);
+    var isParticipant=parts.has(m.user)&&userMsgCount(m.user)>=requiredParticipantMessages();
     var isWinner=currentWinner&&m.user.toLowerCase()===currentWinner.toLowerCase();
     var cls='chat-msg'+(isParticipant?' participant':'')+(isWinner?' highlight':'');
     var nickStyle=m.color?' style="color:'+esc(m.color)+'"':'';
@@ -1789,18 +1804,19 @@ function connect(){
 
     var time=new Date().toLocaleTimeString();
     var msgId=tags['id']||null;
-    renderChatMessage(user,msg,time,msgId,tags['badges'],tags['color']);
 
     if(!userMessages[user])userMessages[user]=[];
     userMessages[user].push({time:time,text:msg,id:msgId,login:userLogin});
     var messageMatchesCode=msg.trim().toLowerCase()===code.toLowerCase();
     if(filterState.ALL||messageMatchesCode)userEntryMatches[user]=true;
-    var requiredMessages=Math.max(getMinMsgs(),filterState.ACTIVE?5:1);
     var hasEntry=userEntryMatches[user]&&(filterState.ACTIVE||filterState.ALL||messageMatchesCode);
-    if(!parts.has(user)&&userMessages[user].length>=requiredMessages&&hasEntry){
+    if(!parts.has(user)&&userMessages[user].length>=requiredParticipantMessages()&&hasEntry){
       parts.add(user);
       render();
     }
+    renderChatMessage(user,msg,time,msgId,tags['badges'],tags['color']);
+    renderParticipantsCount();
+    if(document.getElementById('modal').classList.contains('open'))renderModal();
 
     if(currentWinner&&user.toLowerCase()===currentWinner.toLowerCase()){
       if(winTimerActive){
@@ -1815,7 +1831,7 @@ function connect(){
         var history=document.getElementById('win-chat-history');
         if(history){
           var newMsg=document.createElement('div');
-          newMsg.innerHTML=winnerMsgHtml(name,time,msg);
+          newMsg.innerHTML=winnerMsgHtml(user,time,msg);
           history.insertBefore(newMsg,history.firstChild);
           history.scrollTop=0;
         }
