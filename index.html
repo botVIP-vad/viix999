@@ -72,7 +72,7 @@ html,body{margin:0;height:100%;padding:0;overflow:hidden;background:#0e0e10;colo
 .pbtn:hover{background:rgba(145,70,255,.15);border-color:var(--accent)}
 .reset{width:100%;padding:9px;border-radius:10px;background:transparent;color:var(--accent);font-weight:700;font-size:12px;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:.2s;border:1px solid rgba(145,70,255,.3)}
 .reset:hover{background:rgba(145,70,255,.15);border-color:var(--accent)}
-.frame-wrap{width:calc(50vw - 22px);min-width:0;height:calc(100vh - 132px);margin:110px 22px 22px auto;border-radius:16px;overflow:hidden;background:#0e0e10;backdrop-filter:blur(10px);box-shadow:0 10px 34px rgba(0,0,0,.35),0 0 0 2px rgba(145,70,255,.3),0 0 20px rgba(145,70,255,.15);border:2px solid rgba(145,70,255,.4);position:relative}
+.frame-wrap{width:calc(50vw - 22px);min-width:0;height:calc(100vh - 132px);margin:110px 22px 22px auto;border-radius:16px;overflow:hidden;background:transparent!important;box-shadow:0 0 0 2px rgba(145,70,255,.3),0 0 20px rgba(145,70,255,.15);border:2px solid rgba(145,70,255,.4);position:relative}
 .leaderboard{width:280px;min-height:170px;display:flex;flex-direction:column;gap:8px;background:rgba(22,38,29,.3);backdrop-filter:blur(10px);border:1px solid rgba(145,70,255,.2);border-radius:16px;padding:16px;box-shadow:0 10px 34px rgba(0,0,0,.35)}
 .leaderboard h3{margin:0 0 8px;color:var(--accent);font-size:12px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;text-align:center}
 .leaderboard-list{flex:1;overflow-y:auto;max-height:360px;display:flex;flex-direction:column;gap:4px}
@@ -106,11 +106,9 @@ html,body{margin:0;height:100%;padding:0;overflow:hidden;background:#0e0e10;colo
 .password-box .pbtn{margin-top:4px}
 .password-error{color:#f87171;font-size:12px;text-align:center;min-height:18px;font-weight:600}
 .password-hint{color:var(--muted);font-size:10px;text-align:center;margin-top:-8px}
-.frame-wrap::before{content:'';position:absolute;inset:0;border-radius:16px;padding:2px;background:linear-gradient(135deg,rgba(145,70,255,.5),transparent,rgba(145,70,255,.2));-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none}
-iframe{width:100%;height:100%;display:block;border:0;background:#000;opacity:0;pointer-events:none}
-.chat-overlay{position:absolute;top:0;left:0;right:0;bottom:0;display:flex;flex-direction:column;justify-content:flex-end;padding:10px;overflow-y:auto;scrollbar-width:none;font-size:13px;line-height:1.5;background:transparent;backdrop-filter:none;-webkit-backdrop-filter:none;z-index:5}
+.chat-overlay{position:absolute;top:0;left:0;right:0;bottom:0;display:flex;flex-direction:column;justify-content:flex-end;padding:10px;overflow-y:auto;scrollbar-width:none;font-size:13px;line-height:1.5;background:transparent!important;backdrop-filter:none;-webkit-backdrop-filter:none;z-index:5}
 .chat-overlay::-webkit-scrollbar{display:none}
-.chat-msg{padding:4px 8px;border-bottom:1px solid rgba(145,70,255,.05);word-wrap:break-word}
+.chat-msg{padding:4px 8px;border-bottom:1px solid rgba(145,70,255,.05);word-wrap:break-word;background:transparent!important}
 .chat-msg .nick{color:#fff;font-weight:700}
 .chat-badge{width:16px;height:16px;margin-right:3px;vertical-align:middle;border-radius:3px}
 .chat-badge-txt{display:inline-block;width:15px;height:15px;line-height:15px;margin-right:3px;vertical-align:middle;border-radius:3px;color:#fff;font-size:9px;font-weight:800;text-align:center}
@@ -466,7 +464,6 @@ html.showing-winner body{overflow:hidden}
 </div>
   <div class="middle-hint" id="middleHint"></div>
   <div class="frame-wrap">
-  <iframe id="twitch-chat-frame" title="Twitch chat for viix999" loading="lazy" allow="clipboard-write"></iframe>
   <div class="chat-overlay" id="chatOverlay"></div>
 </div>
   <div class="leaderboard" style="display:none">
@@ -908,8 +905,6 @@ function connectTwitchChannel(){
   if(pc){localStorage.setItem('viix999_points_channel',pc);}
   var st=document.getElementById('twitchStatus');
   st.textContent='Подключение к #'+CH.toLowerCase()+'...';
-  var fr=document.getElementById('twitch-chat-frame');
-  fr.src='https://www.twitch.tv/embed/'+CH+'/chat?parent='+encodeURIComponent(location.hostname||'localhost')+'&darkpopout&darkmode';
   sock.onopen=null; // переопределим ниже через reconnect
   connect();
   var origOnopen=sock.onopen;
@@ -1843,9 +1838,6 @@ function connect(){
   sock.onclose=function(){chatStatus('ОТКЛЮЧЕН, ПЕРЕПОДКЛЮЧЕНИЕ ЧЕРЕЗ 3с','err');setTimeout(connect,3000);};
   sock.onerror=function(){chatStatus('ОШИБКА СОКЕТА','err');};
 }
-
-var f=document.getElementById('twitch-chat-frame');
-f.src='https://www.twitch.tv/embed/'+CH+'/chat?parent='+encodeURIComponent(location.hostname||'localhost')+'&darkpopout&darkmode';
 
 displayTimer();
 connect();
