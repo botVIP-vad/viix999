@@ -1990,7 +1990,7 @@ function winnerCooldownInfo(name){
   var next=new Date(winDate.getTime()+7*24*3600*1000);
   var remain=Math.ceil((next-new Date())/(24*3600*1000));
   if(remain<0)remain=0;
-  return'нужно 7 дн. с последней победы. Осталось: '+remain+' дн. Ближайшая дата: '+next.toLocaleDateString('ru-RU')+'. Победа: '+winDate.toLocaleDateString('ru-RU');
+  return
 }
 
 function winnerMsgHtml(name,time,text){
