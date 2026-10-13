@@ -149,8 +149,18 @@ html,body{margin:0;height:100%;padding:0;overflow:hidden;background:#0e0e10;colo
 .part-tag{display:inline-block;margin-right:5px;padding:1px 6px;border-radius:6px;font-size:9px;font-weight:800;letter-spacing:.5px;vertical-align:middle}
 .part-tag.yes{background:rgba(145,70,255,.25);color:#bf94ff;border:1px solid rgba(145,70,255,.5)}
 .part-tag.no{background:rgba(0,0,0,.3);color:#adadb8;border:1px solid rgba(173,173,184,.3)}
+.chip{display:inline-block;margin-right:4px;padding:2px 8px;border-radius:6px;font-size:10px;font-weight:800;vertical-align:middle}
+.chip-part{background:#2b2350;color:#e9e2ff;border:1px solid rgba(145,70,255,.45)}
+.chip-won{background:rgba(74,222,128,.15);color:#6ef29a;border:1px solid rgba(74,222,128,.4)}
+.chip-info{display:block;font-size:11px;font-weight:600;color:#ffd9a0;margin:4px 0 2px}
 .chat-msg.winner-card{background:transparent;border:0;border-radius:0;padding:8px 10px;margin:4px 0}
 .chat-msg.winner-card .text{color:#ffe9c8}
+.wmsg{padding:6px 8px;border-bottom:1px solid rgba(145,70,255,.06);font-size:12px;line-height:1.5}
+.wmsg-nick{color:#fff;font-weight:800}
+.wmsg-text{color:#efeff1}
+.wmsg-time{display:block;color:#adadb8;font-size:10px;margin-top:2px}
+.wmsg-card{background:linear-gradient(90deg,rgba(245,158,11,.22),rgba(245,158,11,.06));border:1px solid rgba(245,158,11,.5);border-radius:10px;margin:4px 0}
+.wmsg-card .wmsg-text{color:#ffe9c8}
 .chat-msg.participant .nick{color:var(--accent);font-weight:800;text-shadow:0 0 8px rgba(145,70,255,.4)}
 .chat-msg .time{color:var(--muted);font-size:10px;margin-right:6px}
 .chat-msg .text{color:#efeff1}
@@ -309,11 +319,11 @@ html,body{margin:0;height:100%;padding:0;overflow:hidden;background:#0e0e10;colo
 
 /* WINNER SCREEN MODAL STYLES */
 .winner-modal-content{flex-direction:column;width:620px;height:calc(100vh - 110px);max-height:none;border-radius:16px;background:var(--bg);padding:16px;border:2px solid rgba(145,70,255,.4);box-shadow:0 10px 40px rgba(0,0,0,.55);position:relative}
-.winner-modal-content{flex-direction:column;width:820px;max-width:96vw;height:calc(100vh - 90px);max-height:760px;border-radius:16px;background:var(--bg);padding:16px;border:2px solid rgba(145,70,255,.4);box-shadow:0 10px 40px rgba(0,0,0,.55);position:relative}
 html.showing-winner{overflow:hidden}
 html.showing-winner body{overflow:hidden}
 .close-x{position:absolute;right:14px;top:6px;font-size:22px;color:var(--accent);cursor:pointer;transition:.3s;z-index:10}
 .close-x:hover{transform:scale(1.2);text-shadow:0 0 15px var(--accent)}
+.win-msg-count{color:var(--accent);font-weight:800;font-size:12px;letter-spacing:.5px;background:rgba(145,70,255,.08);border:1px solid rgba(145,70,255,.3);border-radius:10px;padding:4px 10px;pointer-events:none;text-align:center;margin-top:6px}
 .win-timer-col{display:flex;flex-direction:column;align-items:center;flex-shrink:0}
 .win-header-block{display:flex;justify-content:space-between;align-items:center;gap:14px;transition:.5s}
 .win-header-center{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
@@ -326,49 +336,14 @@ html.showing-winner body{overflow:hidden}
 #win-timer-label{border:1px solid rgba(145,70,255,.3);padding:6px 14px;border-radius:14px;color:var(--accent);font-size:16px;font-family:'Orbitron',monospace;flex-shrink:0;background:rgba(145,70,255,.05)}
 #win-timer-label.timer-responded{color:#bf94ff;background:rgba(145,70,255,.2);border-color:rgba(145,70,255,.4);box-shadow:0 0 25px rgba(145,70,255,.5)}
 .win-grid{display:flex;flex-direction:column;gap:10px;flex:1 1 0;min-height:0;margin-top:10px;overflow:hidden}
-.win-grid{display:grid;grid-template-columns:1.2fr 0.8fr;gap:12px;flex:1 1 0;min-height:0;margin-top:10px;overflow:hidden}
-@media(max-width:768px){
-  .winner-modal-content{width:96vw;height:calc(100vh - 40px);max-height:none}
-  .win-grid{grid-template-columns:1fr;overflow-y:auto}
-}
 .win-card{flex:1 1 0;min-height:0;background:rgba(24,24,27,.8);border:1px solid rgba(145,70,255,.12);border-radius:18px;padding:10px;display:flex;flex-direction:column;overflow:hidden}
 .win-card h4{margin-top:0;color:var(--accent);font-size:10px;text-transform:uppercase;letter-spacing:1px}
-#win-chat-history{display:block;flex:1;width:100%;min-height:0;border:0;border-radius:10px;background:transparent}
-
-/* TWITCH VIEWER CARD STYLES */
-.vc-container{background:#18181b !important;border:1px solid rgba(145,70,255,.3) !important;box-shadow:0 4px 20px rgba(0,0,0,.4);display:flex;flex-direction:column;padding:10px;gap:8px;overflow:hidden}
-.vc-header{background:#1f1f23;border-radius:12px;padding:9px 10px;border:1px solid rgba(145,70,255,.15);display:flex;flex-direction:column;gap:8px;flex-shrink:0}
-.vc-title-row{display:flex;align-items:center;justify-content:space-between;gap:6px}
-.vc-title{color:var(--accent);font-size:10px;font-weight:800;letter-spacing:1px;display:flex;align-items:center}
-.vc-actions{display:flex;gap:5px}
-.vc-btn{background:rgba(145,70,255,.15);border:1px solid rgba(145,70,255,.3);color:#bf94ff;border-radius:6px;padding:3px 7px;font-size:9px;font-weight:800;cursor:pointer;transition:.2s;text-decoration:none;white-space:nowrap}
-.vc-btn:hover{background:var(--accent);color:#0e0e10;transform:translateY(-1px)}
-.vc-user-row{display:flex;align-items:center;gap:10px}
-.vc-avatar{width:42px;height:42px;border-radius:50%;border:2px solid var(--accent);object-fit:cover;background:#0e0e10;flex-shrink:0}
-.vc-user-info{display:flex;flex-direction:column;gap:2px;min-width:0;flex:1}
-.vc-name-row{display:flex;align-items:baseline;gap:6px;overflow:hidden}
-.vc-display-name{color:#fff;font-weight:800;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.vc-login{color:var(--muted);font-size:11px;font-weight:600}
-.vc-badges{display:flex;align-items:center;gap:4px;flex-wrap:wrap;min-height:16px}
-.tw-badge{display:inline-block;width:16px;height:16px;border-radius:3px;vertical-align:middle;object-fit:contain}
-.vc-stats-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:2px}
-.vc-stat-box{background:rgba(0,0,0,.35);border:1px solid rgba(145,70,255,.12);border-radius:8px;padding:4px 6px;display:flex;flex-direction:column;gap:2px;min-width:0}
-.vc-stat-lbl{font-size:8px;font-weight:700;color:var(--muted);letter-spacing:.5px;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.vc-stat-val{font-size:10px;font-weight:800;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.vc-messages-wrap{display:flex;flex-direction:column;flex:1;min-height:0;background:rgba(0,0,0,.25);border-radius:12px;border:1px solid rgba(145,70,255,.15);overflow:hidden}
-.vc-messages-header{display:flex;align-items:center;justify-content:space-between;padding:6px 10px;background:rgba(145,70,255,.08);border-bottom:1px solid rgba(145,70,255,.12);font-size:10px;font-weight:800;color:var(--accent);letter-spacing:1px;flex-shrink:0}
-.vc-live-badge{background:rgba(239,68,68,.2);color:#f87171;border:1px solid rgba(239,68,68,.4);padding:1px 5px;border-radius:999px;font-size:8px;font-weight:800;letter-spacing:.5px}
-.vc-messages-list{flex:1;min-height:0;overflow-y:auto;padding:8px;display:flex;flex-direction:column;gap:6px}
-.vc-messages-list::-webkit-scrollbar{width:5px}
-.vc-messages-list::-webkit-scrollbar-thumb{background:var(--accent);border-radius:8px}
-.vc-msg-item{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.05);border-left:3px solid var(--accent);border-radius:6px;padding:5px 8px;font-size:11px;line-height:1.4;word-break:break-word;transition:background .2s}
-.vc-msg-item:hover{background:rgba(145,70,255,.08)}
-.vc-msg-meta{display:flex;align-items:center;gap:6px;margin-bottom:2px;font-size:10px}
-.vc-msg-time{color:var(--muted);font-family:monospace}
-.vc-msg-badges{display:inline-flex;align-items:center;gap:3px}
-.vc-msg-nick{font-weight:800}
-.vc-msg-text{color:#efeff1;font-size:11px}
-.vc-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;color:var(--muted);font-size:11px;text-align:center;padding:16px;gap:6px}
+#win-chat-history{overflow-y:auto;flex-grow:1;font-size:12px;min-height:0}
+#win-chat-history::-webkit-scrollbar{width:4px}
+#win-chat-history::-webkit-scrollbar-thumb{background:var(--accent);border-radius:8px}
+#win-chat-history::-webkit-scrollbar-track{background:rgba(145,70,255,.05);border-radius:8px}
+#win-chat-history div{padding:3px 0;border-bottom:1px solid rgba(145,70,255,.05)}
+#win-chat-history small{color:var(--muted)}
 .win-response-msg{background:rgba(145,70,255,.08) !important;border-left:3px solid var(--accent);border-radius:10px;padding:4px 8px !important;margin:3px 0 !important}
 .win-stats-row{display:flex;gap:10px;margin-bottom:6px}
 .win-stat-item{padding:4px 0}
@@ -653,59 +628,13 @@ html.showing-winner body{overflow:hidden}
       </div>
       <div class="win-timer-col">
         <div id="win-timer-label">00:00:00</div>
+        <div id="win-msg-count" class="win-msg-count">Сообщений сегодня: 0</div>
       </div>
     </div>
     <div class="win-grid">
       <div class="win-card">
-        <iframe id="win-chat-history" title="Twitch viewer card for winner" loading="lazy"></iframe>
-      <div class="win-card vc-container" id="win-viewercard-card">
-        <!-- КАРТОЧКА ЗРИТЕЛЯ TWITCH -->
-        <div class="vc-header">
-          <div class="vc-title-row">
-            <span class="vc-title">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:-2px;margin-right:4px;color:#bf94ff"><path d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714Z"/></svg>
-              КАРТОЧКА ЗРИТЕЛЯ
-            </span>
-            <div class="vc-actions">
-              <button type="button" class="vc-btn" onclick="openTwitchPopoutCard()" title="Открыть всплывающую карточку Twitch">TWITCH ↗</button>
-              <button type="button" class="vc-btn" onclick="openFollowageLink()" title="Проверить подписки на showmasterokda">FOLLOWAGE 🔗</button>
-            </div>
-          </div>
-          
-          <div class="vc-user-row">
-            <img id="vc-avatar" class="vc-avatar" src="" alt="" onerror="this.src='icon.png'">
-            <div class="vc-user-info">
-              <div class="vc-name-row">
-                <span id="vc-display-name" class="vc-display-name">---</span>
-                <span id="vc-login" class="vc-login">@---</span>
-              </div>
-              <div id="vc-badges" class="vc-badges"></div>
-            </div>
-          </div>
-
-          <div class="vc-stats-grid">
-            <div class="vc-stat-box">
-              <span class="vc-stat-lbl">💜 ОТСЛЕЖИВАЕТ:</span>
-              <span id="vc-follow-val" class="vc-stat-val">Загрузка...</span>
-            </div>
-            <div class="vc-stat-box">
-              <span class="vc-stat-lbl">🎂 СОЗДАН:</span>
-              <span id="vc-created-val" class="vc-stat-val">Загрузка...</span>
-            </div>
-            <div class="vc-stat-box">
-              <span class="vc-stat-lbl">💬 СООБЩЕНИЙ:</span>
-              <span id="vc-msgs-count" class="vc-stat-val">0</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="vc-messages-wrap">
-          <div class="vc-messages-header">
-            <span>💬 СООБЩЕНИЯ В ЭТОМ СТРИМЕ</span>
-            <span class="vc-live-badge">LIVE ЧАТ</span>
-          </div>
-          <div id="win-chat-history" class="vc-messages-list"></div>
-        </div>
+        <h4>Сообщения пользователя за сегодня:</h4>
+        <div id="win-chat-history"></div>
       </div>
       <div id="win-stat-card" class="win-card">
         <h4>История игрока (Global):</h4>
@@ -1744,150 +1673,53 @@ function startQuickRoll(){if(parts.size===0){alert('Нет участников!
 var winTimerActive=false;
 var winnerHistory=JSON.parse(localStorage.getItem('viix999_winner_history')||'{}');
 var userMessages={};
-var userProfiles={};
+var dailyChatArchiveKey='';
+var dailyChatArchive=[];
 var userEntryMatches={};
 var rerollCount=0;
 var winnerResultSaved=false;
 
-function getUserMessagesList(name){
-  if(!name)return[];
-  var key=name.toLowerCase();
-  if(userMessages[key]&&userMessages[key].length)return userMessages[key];
-  for(var k in userMessages){
-    if(k.toLowerCase()===key&&Array.isArray(userMessages[k]))return userMessages[k];
+function localDateKey(date){
+  return date.getFullYear()+'-'+String(date.getMonth()+1).padStart(2,'0')+'-'+String(date.getDate()).padStart(2,'0');
+}
+
+function ensureDailyChatArchive(){
+  var key='viix999_chat_archive_'+CH.toLowerCase()+'_'+localDateKey(new Date());
+  if(key===dailyChatArchiveKey)return;
+  dailyChatArchiveKey=key;
+  try{
+    var saved=JSON.parse(localStorage.getItem(key)||'[]');
+    dailyChatArchive=Array.isArray(saved)?saved:[];
+  }catch(error){
+    dailyChatArchive=[];
+    console.warn('Не удалось загрузить архив сообщений чата за сегодня:',error);
   }
-  return[];
 }
 
-function openTwitchPopoutCard(){
-  if(!currentWinner)return;
-  var ch=(CH||'viix999').toLowerCase();
-  var url='https://www.twitch.tv/popout/'+encodeURIComponent(ch)+'/viewercard/'+encodeURIComponent(currentWinner)+'?popout=';
-  window.open(url,'_blank','width=380,height=620,status=no,toolbar=no,menubar=no,resizable=yes');
-}
-
-function openFollowageLink(){
-  if(!currentWinner)return;
-  window.open('https://followage.showmasterokda.com/?user='+encodeURIComponent(currentWinner),'_blank');
-}
-
-function formatViewerCardMessageHtml(m){
-  var badgesHtml=m.badges?renderBadgesHtml(m.badges):'';
-  var nickColor=m.color||'#bf94ff';
-  var isCodeMatch=code&&m.text&&m.text.trim().toLowerCase()===code.toLowerCase();
-  var matchBadge=isCodeMatch?'<span style="background:rgba(145,70,255,.3);color:#bf94ff;border:1px solid rgba(145,70,255,.5);font-size:8px;font-weight:800;padding:1px 4px;border-radius:4px;margin-left:4px">КОД</span>':'';
-
-  return'<div class="vc-msg-item">'+
-    '<div class="vc-msg-meta">'+
-      '<span class="vc-msg-time">'+esc(m.time)+'</span>'+
-      (badgesHtml?'<span class="vc-msg-badges">'+badgesHtml+'</span>':'')+
-      '<span class="vc-msg-nick" style="color:'+esc(nickColor)+'">'+esc(m.user||m.login||'---')+':</span>'+
-      matchBadge+
-    '</div>'+
-    '<div class="vc-msg-text">'+esc(m.text)+'</div>'+
-  '</div>';
-}
-
-function appendWinnerCardLiveMessage(m){
-  var cont=document.getElementById('win-chat-history');
-  if(!cont)return;
-  var empty=cont.querySelector('.vc-empty');
-  if(empty)cont.innerHTML='';
-  var temp=document.createElement('div');
-  temp.innerHTML=formatViewerCardMessageHtml(m);
-  if(temp.firstChild)cont.appendChild(temp.firstChild);
-  var msgsCount=document.getElementById('vc-msgs-count');
-  if(msgsCount){
-    var cnt=parseInt(msgsCount.innerText)||0;
-    msgsCount.innerText=cnt+1;
+function saveDailyChatArchive(){
+  ensureDailyChatArchive();
+  try{
+    localStorage.setItem(dailyChatArchiveKey,JSON.stringify(dailyChatArchive));
+  }catch(error){
+    console.warn('Не удалось сохранить архив сообщений чата за сегодня:',error);
   }
-  cont.scrollTop=cont.scrollHeight;
+}
+
+function dailyMessagesForUser(name){
+  ensureDailyChatArchive();
+  var target=String(name||'').toLowerCase();
+  return dailyChatArchive.filter(function(message){
+    return String(message.user||'').toLowerCase()===target
+      ||String(message.login||'').toLowerCase()===target;
+  });
 }
 
 function renderWinnerChatHistory(name){
-  var viewerCard=document.getElementById('win-chat-history');
-  if(!viewerCard)return;
-  var parent=location.hostname||'localhost';
-  viewerCard.src='https://www.twitch.tv/popout/'+encodeURIComponent(CH.toLowerCase())
-    +'/viewercard/'+encodeURIComponent(name)+'?popout=&parent='+encodeURIComponent(parent);
-  if(!name)return;
-  var cont=document.getElementById('win-chat-history');
-  var avatar=document.getElementById('vc-avatar');
-  var dName=document.getElementById('vc-display-name');
-  var dLogin=document.getElementById('vc-login');
-  var badgesBox=document.getElementById('vc-badges');
-  var followVal=document.getElementById('vc-follow-val');
-  var createdVal=document.getElementById('vc-created-val');
-  var msgsCount=document.getElementById('vc-msgs-count');
-
-  var key=name.toLowerCase();
-  var prof=userProfiles[key]||{displayName:name,login:key,badges:'',color:'#bf94ff'};
-
-  if(dName)dName.innerText=prof.displayName||name;
-  if(dLogin)dLogin.innerText='@'+(prof.login||key);
-  if(badgesBox)badgesBox.innerHTML=renderBadgesHtml(prof.badges);
-  if(avatar){
-    avatar.src='https://decapi.me/twitch/avatar/'+encodeURIComponent(key);
-  }
-
-  // Load Followage and Account Creation from DecAPI
-  if(followVal){
-    followVal.innerText='Загрузка...';
-    followVal.style.color='#fff';
-    fetch('https://decapi.me/twitch/followage/'+encodeURIComponent(CH.toLowerCase())+'/'+encodeURIComponent(key))
-      .then(function(r){return r.text();})
-      .then(function(txt){
-        if(!txt||txt.indexOf('429')>=0||txt.indexOf('Error')>=0){
-          followVal.innerText='Недоступно';
-          return;
-        }
-        var lower=txt.toLowerCase();
-        if(lower.indexOf('not following')>=0||lower.indexOf('does not follow')>=0){
-          followVal.innerText='Не отслеживает ✕';
-          followVal.style.color='#f87171';
-        } else {
-          var cleaned=txt.replace(/years?/gi,'г.')
-                         .replace(/months?/gi,'мес.')
-                         .replace(/weeks?/gi,'нед.')
-                         .replace(/days?/gi,'дн.')
-                         .replace(/hours?/gi,'ч.')
-                         .replace(/minutes?/gi,'мин.')
-                         .replace(/seconds?/gi,'сек.');
-          followVal.innerText=cleaned;
-          followVal.style.color='#4ade80';
-        }
-      })
-      .catch(function(){if(followVal)followVal.innerText='—';});
-  }
-
-  if(createdVal){
-    createdVal.innerText='Загрузка...';
-    fetch('https://decapi.me/twitch/creation/'+encodeURIComponent(key))
-      .then(function(r){return r.text();})
-      .then(function(txt){
-        if(!txt||txt.indexOf('429')>=0||txt.indexOf('Error')>=0){
-          createdVal.innerText='—';
-          return;
-        }
-        createdVal.innerText=txt;
-      })
-      .catch(function(){if(createdVal)createdVal.innerText='—';});
-  }
-
-  var msgs=getUserMessagesList(name);
-  if(msgsCount)msgsCount.innerText=msgs.length;
-
-  if(!cont)return;
-  if(msgs.length===0){
-    cont.innerHTML='<div class="vc-empty"><div style="font-size:22px">💬</div><div>В этой сессии стрима сообщений от <b>'+esc(name)+'</b> пока нет</div><div style="font-size:9px;opacity:.7">Новые сообщения от победителя появятся здесь автоматически</div></div>';
-    return;
-  }
-
-  cont.innerHTML=msgs.map(function(m){
-    return formatViewerCardMessageHtml(m);
-  }).join('');
-
-  cont.scrollTop=cont.scrollHeight;
+  var history=document.getElementById('win-chat-history');
+  if(!history)return;
+  history.innerHTML=dailyMessagesForUser(name).map(function(message){
+    return winnerMsgHtml(message.user||name,message.time,message.text);
+  }).reverse().join('');
 }
 
 // ===== ОБЪЕДИНЁННАЯ СТАТИСТИКА: vix + welvol =====
@@ -1941,6 +1773,7 @@ function showWinner(name){
   timerLabel.innerText='00:00:00';
   winNick.innerText=name;
   document.getElementById('reroll-counter-display').innerText='Рероллов: '+rerollCount;
+  updateWinMsgCount();
   var f=document.getElementById('win-form-panel');
   if(f)f.style.display='none';
   var ai=document.getElementById('win-amount-input');
@@ -1964,6 +1797,41 @@ function showWinner(name){
     }
   },1000);
   currentSession={winner:name.toUpperCase(),date:new Date().toLocaleDateString('ru-RU'),startTime:Date.now(),messages:[]};
+}
+
+function updateWinMsgCount(){
+  var el=document.getElementById('win-msg-count');
+  if(!el)return;
+  var messages=currentWinner?dailyMessagesForUser(currentWinner):[];
+  el.textContent='Сообщений сегодня: '+messages.length;
+  if(currentWinner&&document.getElementById('winner-screen').classList.contains('open')){
+    renderWinnerChatHistory(currentWinner);
+  }
+}
+
+function winnerCooldownInfo(name){
+  var h=winnerHistory[name.toLowerCase()]||[];
+  var last=null;
+  for(var i=h.length-1;i>=0;i--){if(!h[i].isReroll){last=h[i];break;}}
+  if(!last)return'';
+  var p=String(last.date||'').split(' ')[0].split('.');
+  if(p.length<3)return'';
+  var winDate=new Date(parseInt(p[2]),parseInt(p[1])-1,parseInt(p[0]));
+  if(isNaN(winDate.getTime()))return'';
+  var next=new Date(winDate.getTime()+7*24*3600*1000);
+  var remain=Math.ceil((next-new Date())/(24*3600*1000));
+  if(remain<0)remain=0;
+  return'нужно 7 дн. с последней победы. Осталось: '+remain+' дн. Ближайшая дата: '+next.toLocaleDateString('ru-RU')+'. Победа: '+winDate.toLocaleDateString('ru-RU');
+}
+
+function winnerMsgHtml(name,time,text){
+  var isWinner=currentWinner&&name.toLowerCase()===currentWinner.toLowerCase();
+  var won=userHasRealWin(name);
+  var cls='wmsg'+(isWinner?' wmsg-card':'');
+  var chips='<span class="chip chip-part">УЧАСТНИК</span>';
+  if(won)chips+='<span class="chip chip-won">Победил</span>';
+  var info=(isWinner?'<span class="chip-info">'+esc(winnerCooldownInfo(name))+'</span>':'');
+  return'<div class="'+cls+'">'+chips+'<span class="wmsg-nick">'+esc(name)+':</span> <span class="wmsg-text">'+esc(text)+'</span>'+info+'<small class="wmsg-time">'+esc(time)+'</small></div>';
 }
 
 function renderWinnerHistory(name){
@@ -2026,9 +1894,6 @@ function finishCloseWinner(){
   currentWinner=null;
   currentSession=null;
   winnerResultSaved=false;
-  var viewerCard=document.getElementById('win-chat-history');
-  if(viewerCard)viewerCard.src='about:blank';
-  if(viewerCard){if(viewerCard.tagName==='IFRAME')viewerCard.src='about:blank';else viewerCard.innerHTML='';}
 }
 function closeWinnerScreen(){
   saveWinnerResult(false);
@@ -2043,9 +1908,6 @@ function closeModals(){
   document.getElementById('winner-screen').classList.remove('open');
   winTimerActive=false;
   clearInterval(window.winInt);
-  var viewerCard=document.getElementById('win-chat-history');
-  if(viewerCard)viewerCard.src='about:blank';
-  if(viewerCard){if(viewerCard.tagName==='IFRAME')viewerCard.src='about:blank';else viewerCard.innerHTML='';}
 }
 
 document.addEventListener('keydown',function(e){if(e.key==='Escape'){closeModals();closeWheel();var wo=document.getElementById('welvolOverlay');if(wo&&wo.classList.contains('open'))closeWelvolScreen();closeWelvolApp();}});
@@ -2057,26 +1919,14 @@ var staticBadges={
   'moderator':'3267646d-33f0-4b17-b3df-f923a41db1d0',
   'vip':'b817bbc4-3b98-45cd-84dc-4e46a4e045ed',
   'premium':'a1c876cb-47eb-4c61-89e1-11a3d9a44b3c'
-  'premium':'a1c876cb-47eb-4c61-89e1-11a3d9a44b3c',
-  'turbo':'bd444ec6-8094-46eb-aca7-217754000da8',
-  'partner':'d12a2e27-16f6-41d0-ab77-b780518f00a3'
 };
 function badgeUrl(name,ver){
   if(staticBadges[name])return'https://static-cdn.jtvnw.net/badges/v1/'+staticBadges[name]+'/3';
   if(name==='subscriber')return'https://static-cdn.jtvnw.net/badges/v1/5d9f2208-5dd8-11e7-ab5b-b4d975e5e2e4/3';
-  if(staticBadges[name])return'https://static-cdn.jtvnw.net/badges/v1/'+staticBadges[name]+'/2';
-  if(name==='subscriber')return'https://static-cdn.jtvnw.net/badges/v1/5d9f2208-5dd8-11e7-ab5b-b4d975e5e2e4/2';
   return null;
 }
 function renderBadgesHtml(badgesStr){
   return'';
-  if(!badgesStr)return'';
-  return badgesStr.split(',').map(function(item){
-    var p=item.split('/')[0];
-    var u=badgeUrl(p);
-    if(u)return'<img class="tw-badge" src="'+u+'" alt="'+esc(p)+'" title="'+esc(p)+'">';
-    return'';
-  }).join('');
 }
 
 function chatStatus(txt,cls){console.log('[CHAT]',txt);}
@@ -2138,10 +1988,14 @@ function connect(){
       if(targetMsgId){
         chatMessages=chatMessages.filter(function(m){return m.id!==targetMsgId;});
         renderChatOverlay();
+        ensureDailyChatArchive();
+        dailyChatArchive=dailyChatArchive.filter(function(message){return message.id!==targetMsgId;});
+        saveDailyChatArchive();
         // Удалить также из userMessages
         Object.keys(userMessages).forEach(function(name){
           userMessages[name]=userMessages[name].filter(function(m){return m.id!==targetMsgId;});
         });
+        updateWinMsgCount();
       }
       return;
     }
@@ -2154,6 +2008,12 @@ function connect(){
         targetUser=targetUser.trim().toLowerCase();
         chatMessages=chatMessages.filter(function(m){return m.user.toLowerCase()!==targetUser;});
         renderChatOverlay();
+        ensureDailyChatArchive();
+        dailyChatArchive=dailyChatArchive.filter(function(message){
+          return String(message.login||message.user||'').toLowerCase()!==targetUser
+            &&String(message.user||'').toLowerCase()!==targetUser;
+        });
+        saveDailyChatArchive();
         // Удалить из userMessages
         Object.keys(userMessages).forEach(function(name){
           var remaining=userMessages[name].filter(function(message){
@@ -2162,6 +2022,7 @@ function connect(){
           if(remaining.length)userMessages[name]=remaining;
           else delete userMessages[name];
         });
+        updateWinMsgCount();
       }
       return;
     }
@@ -2180,19 +2041,19 @@ function connect(){
     var time=new Date().toLocaleTimeString();
     var msgId=tags['id']||null;
 
+    ensureDailyChatArchive();
+    dailyChatArchive.push({
+      user:user,
+      login:userLogin,
+      text:msg,
+      time:time,
+      id:msgId,
+      timestamp:Date.now()
+    });
+    saveDailyChatArchive();
+
     if(!userMessages[user])userMessages[user]=[];
     userMessages[user].push({time:time,text:msg,id:msgId,login:userLogin});
-    var userBadges=tags['badges']||'';
-    var userColor=tags['color']||'#bf94ff';
-    var msgObj={time:time,text:msg,id:msgId,login:userLogin,user:user,badges:userBadges,color:userColor};
-    userMessages[user].push(msgObj);
-    userProfiles[user.toLowerCase()]={
-      displayName:user,
-      login:userLogin,
-      badges:userBadges,
-      color:userColor,
-      lastSeen:time
-    };
     var messageMatchesCode=msg.trim().toLowerCase()===code.toLowerCase();
     if(filterState.ALL||messageMatchesCode)userEntryMatches[user]=true;
     var hasEntry=userEntryMatches[user]&&(filterState.ACTIVE||filterState.ALL||messageMatchesCode);
@@ -2201,7 +2062,6 @@ function connect(){
       render();
     }
     renderChatMessage(user,msg,time,msgId,tags['badges'],tags['color']);
-    renderChatMessage(user,msg,time,msgId,userBadges,userColor);
     renderParticipantsCount();
     if(document.getElementById('modal').classList.contains('open'))renderModal();
 
@@ -2215,9 +2075,9 @@ function connect(){
       }
       winnerResponded=true;
       if(currentSession)currentSession.endTime=Date.now();
-      appendWinnerCardLiveMessage(msgObj);
     }
     winnerMessages.push({user:user,msg:msg,isWinner:currentWinner&&user.toLowerCase()===currentWinner.toLowerCase()});
+    updateWinMsgCount();
   };
   sock.onclose=function(){chatStatus('ОТКЛЮЧЕН, ПЕРЕПОДКЛЮЧЕНИЕ ЧЕРЕЗ 3с','err');setTimeout(connect,3000);};
   sock.onerror=function(){chatStatus('ОШИБКА СОКЕТА','err');};
