@@ -9,7 +9,9 @@
 *{box-sizing:border-box}
 html,body{margin:0;height:100%;padding:0;overflow:hidden;background:#0e0e10;color:var(--text);font-family:'Inter',sans-serif;font-weight:600}
 #bgvid{position:fixed;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;opacity:.4;pointer-events:none;background:url('vix.jpg') center/cover no-repeat}
-.left-col{position:fixed;top:22px;bottom:22px;left:22px;z-index:49;width:340px;display:flex;flex-direction:column;gap:10px}
+.left-col{position:fixed;top:22px;bottom:22px;left:22px;z-index:49;width:340px;display:flex;flex-direction:column;gap:10px;overflow-y:auto;scrollbar-width:thin}
+.left-col::-webkit-scrollbar{width:5px}
+.left-col::-webkit-scrollbar-thumb{background:var(--accent);border-radius:8px}
 .topbar{position:static;display:flex;gap:10px;align-items:stretch}
 .topbar-item{flex:1;min-width:0;display:flex;flex-direction:column;gap:6px;background:rgba(24,24,27,.55);backdrop-filter:blur(10px);border:1px solid rgba(145,70,255,.2);border-radius:12px;padding:10px 10px;box-shadow:0 10px 34px rgba(0,0,0,.35)}
 .topbar-item:first-child{flex:1.6}
@@ -43,6 +45,34 @@ html,body{margin:0;height:100%;padding:0;overflow:hidden;background:#0e0e10;colo
 .last-winners-list::-webkit-scrollbar{width:5px}
 .last-winners-list::-webkit-scrollbar-thumb{background:var(--accent);border-radius:8px}
 .last-winners-list::-webkit-scrollbar-track{background:rgba(145,70,255,.08);border-radius:8px}
+.vix-timer{align-self:stretch;padding:12px;background:rgba(14,14,16,.82);backdrop-filter:blur(10px);border:1px solid rgba(145,70,255,.2);border-radius:12px;text-align:center}
+.vix-timer-label{margin-bottom:8px;color:var(--muted);font-size:10px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase}
+.vix-flip-clock{display:flex;justify-content:center;gap:6px}
+.vix-flip-container{display:flex;flex-direction:column;align-items:center}
+.vix-digit-group{display:flex;gap:3px}
+.vix-flip-card{position:relative;width:38px;height:52px;border-radius:6px;color:#deebff;font-size:34px;font-weight:800;perspective:300px}
+.vix-card-face{position:absolute;left:0;width:100%;height:50%;overflow:hidden;background:linear-gradient(180deg,#252a3a 0%,#1a1d2e 100%);backface-visibility:hidden;box-shadow:0 2px 4px rgba(0,0,0,.4)}
+.vix-card-top,.vix-card-fold-top{top:0;border-radius:6px 6px 0 0;border-bottom:1px solid rgba(0,0,0,.5)}
+.vix-card-bottom,.vix-card-fold-bottom{bottom:0;border-radius:0 0 6px 6px}
+.vix-card-top .text,.vix-card-fold-top .text{position:absolute;top:0;left:50%;height:52px;line-height:52px;transform:translateX(-50%)}
+.vix-card-bottom .text,.vix-card-fold-bottom .text{position:absolute;bottom:0;left:50%;height:52px;line-height:52px;transform:translateX(-50%)}
+.vix-card-top,.vix-card-bottom{z-index:1}
+.vix-card-fold-top{z-index:3;transform-origin:bottom}
+.vix-card-fold-bottom{z-index:2;transform:rotateX(90deg);transform-origin:top}
+.vix-flip .vix-card-fold-top{animation:vixFlipTop .35s ease-in forwards}
+.vix-flip .vix-card-fold-bottom{animation:vixFlipBottom .35s ease-out .35s forwards}
+@keyframes vixFlipTop{to{transform:rotateX(-90deg)}}
+@keyframes vixFlipBottom{to{transform:rotateX(0deg)}}
+.vix-flip-clock.vix-warning .vix-card-face{background:linear-gradient(180deg,#3a2020 0%,#2a1515 100%);color:#ffb4b4}
+.vix-flip-clock.vix-danger .vix-card-face{background:linear-gradient(180deg,#3a1515 0%,#2a0a0a 100%);color:#ff9090}
+.vix-flip-label{margin-top:5px;color:var(--muted);font-size:8px;font-weight:700;letter-spacing:1px;text-transform:uppercase}
+.vix-flip-divider{align-self:center;color:var(--muted);font-size:28px;font-weight:800}
+.vix-timer-controls,.vix-timer-presets{display:flex;justify-content:center;gap:5px;margin-top:9px}
+.vix-timer-btn,.vix-timer-preset{border:1px solid rgba(145,70,255,.3);background:rgba(255,255,255,.04);color:var(--text);cursor:pointer;transition:.2s}
+.vix-timer-btn{width:34px;height:30px;border-radius:8px;font-size:12px;font-weight:800}
+.vix-timer-preset{padding:4px 8px;border-radius:999px;color:var(--muted);font-size:9px}
+.vix-timer-btn:hover,.vix-timer-preset:hover{background:rgba(145,70,255,.2);border-color:var(--accent);color:#fff}
+.vix-timer-btn.active{background:var(--accent);color:#fff}
 .lw-item{display:flex;align-items:center;gap:8px;padding:5px 6px;border-radius:8px;background:rgba(0,0,0,.25)}
 .lw-item img{width:26px;height:26px;border-radius:50%;object-fit:cover;flex-shrink:0;background:#18181b;border:1px solid rgba(145,70,255,.35)}
 .lw-item .lw-col{display:flex;flex-direction:column;gap:1px;min-width:0}
@@ -398,6 +428,59 @@ html.showing-winner body{overflow:hidden}
     <span class="pc-num" id="partsCount">0</span>
   </div>
   <button class="winner-pick-btn" style="background:rgba(145,70,255,.08);color:var(--accent);border:1px solid rgba(145,70,255,.3)" onclick="openLastWinners()">⭐ ПРОШЛЫЕ ПОБЕДИТЕЛИ РОЗЫГРЫШЕЙ</button>
+  <div class="vix-timer">
+    <div class="vix-timer-label">⏱ Таймер</div>
+    <div class="vix-flip-clock" id="vixFlipClock">
+      <div class="vix-flip-container">
+        <div class="vix-digit-group">
+          <div class="vix-flip-card" id="vixM1">
+            <div class="vix-card-face vix-card-top"><div class="text">1</div></div>
+            <div class="vix-card-face vix-card-bottom"><div class="text">1</div></div>
+            <div class="vix-card-face vix-card-fold-top"><div class="text">1</div></div>
+            <div class="vix-card-face vix-card-fold-bottom"><div class="text">1</div></div>
+          </div>
+          <div class="vix-flip-card" id="vixM2">
+            <div class="vix-card-face vix-card-top"><div class="text">0</div></div>
+            <div class="vix-card-face vix-card-bottom"><div class="text">0</div></div>
+            <div class="vix-card-face vix-card-fold-top"><div class="text">0</div></div>
+            <div class="vix-card-face vix-card-fold-bottom"><div class="text">0</div></div>
+          </div>
+        </div>
+        <div class="vix-flip-label">Минуты</div>
+      </div>
+      <div class="vix-flip-divider">:</div>
+      <div class="vix-flip-container">
+        <div class="vix-digit-group">
+          <div class="vix-flip-card" id="vixS1">
+            <div class="vix-card-face vix-card-top"><div class="text">0</div></div>
+            <div class="vix-card-face vix-card-bottom"><div class="text">0</div></div>
+            <div class="vix-card-face vix-card-fold-top"><div class="text">0</div></div>
+            <div class="vix-card-face vix-card-fold-bottom"><div class="text">0</div></div>
+          </div>
+          <div class="vix-flip-card" id="vixS2">
+            <div class="vix-card-face vix-card-top"><div class="text">0</div></div>
+            <div class="vix-card-face vix-card-bottom"><div class="text">0</div></div>
+            <div class="vix-card-face vix-card-fold-top"><div class="text">0</div></div>
+            <div class="vix-card-face vix-card-fold-bottom"><div class="text">0</div></div>
+          </div>
+        </div>
+        <div class="vix-flip-label">Секунды</div>
+      </div>
+    </div>
+    <div class="vix-timer-controls">
+      <button class="vix-timer-btn" onclick="timerToggle()" id="vixTimerPlayBtn" title="Старт/Пауза">▶</button>
+      <button class="vix-timer-btn" onclick="timerReset()" title="Сброс">↺</button>
+      <button class="vix-timer-btn" onclick="timerAdd(60)" title="+1 минута">+1</button>
+      <button class="vix-timer-btn" onclick="timerAdd(-60)" title="-1 минута">−1</button>
+    </div>
+    <div class="vix-timer-presets">
+      <button class="vix-timer-preset" onclick="timerSet(5)">5м</button>
+      <button class="vix-timer-preset" onclick="timerSet(10)">10м</button>
+      <button class="vix-timer-preset" onclick="timerSet(15)">15м</button>
+      <button class="vix-timer-preset" onclick="timerSet(30)">30м</button>
+      <button class="vix-timer-preset" onclick="timerSet(60)">60м</button>
+    </div>
+  </div>
 </div>
 
 
@@ -545,12 +628,12 @@ html.showing-winner body{overflow:hidden}
       </div>
       <div class="win-timer-col">
         <div id="win-timer-label">00:00:00</div>
-        <div id="win-msg-count" class="win-msg-count">Сообщений: 0</div>
+        <div id="win-msg-count" class="win-msg-count">Сообщений сегодня: 0</div>
       </div>
     </div>
     <div class="win-grid">
       <div class="win-card">
-        <h4>Сообщения в этом стриме:</h4>
+        <h4>Сообщения пользователя за сегодня:</h4>
         <div id="win-chat-history"></div>
       </div>
       <div id="win-stat-card" class="win-card">
@@ -605,8 +688,7 @@ var CH='viix999';
 var code=localStorage.getItem('viix999_code')||'';
 var parts=new Set(JSON.parse(localStorage.getItem('viix999_parts')||'[]'));
 var sock=null;
-var timerSeconds=0,timerInterval=null,timerRunning=false;
-var MAX_DASH=2*Math.PI*56;
+var timerSeconds=600,timerRunning=false,timerFrame=null,timerEndTime=0,remainingOnPause=600;
 var passwordModal=document.getElementById('passwordModal');
 var passwordInput=document.getElementById('passwordInput');
 var passwordError=document.getElementById('passwordError');
@@ -1357,10 +1439,124 @@ function renderChatMessage(user,msg,time,id,badgesStr,color){
   if(chatMessages.length>MAX_CHAT_MSGS)chatMessages.shift();
   renderChatOverlay();
 }
-function displayTimer(){var el=document.getElementById('timeDisplay');if(!el)return;var m=Math.floor(timerSeconds/60);var s=timerSeconds%60;el.textContent=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');var origTotal=window._origTotal||60;var elapsed=origTotal-timerSeconds;var progress=origTotal>0?elapsed/origTotal:0;var cp=document.getElementById('circleProgress');if(cp)cp.style.strokeDashoffset=MAX_DASH*(1-progress);}
-function adjustTime(sec){timerSeconds=Math.max(0,timerSeconds+sec);window._origTotal=timerSeconds>0?timerSeconds:60;displayTimer();}
-function startTimer(){if(timerRunning)return;timerRunning=true;document.getElementById('btnStart').classList.add('active');document.getElementById('btnPause').classList.remove('active');window._origTotal=timerSeconds>0?timerSeconds:60;timerInterval=setInterval(function(){if(timerSeconds>0){timerSeconds--;displayTimer();}else{pauseTimer();document.getElementById('timeLabel').textContent='Финиш';document.getElementById('timeLabel').classList.add('finish');}},1000);}
-function pauseTimer(){timerRunning=false;clearInterval(timerInterval);document.getElementById('btnStart').classList.remove('active');document.getElementById('btnPause').classList.add('active');}
+function updateTimerCard(cardId,newValue){
+  var card=document.getElementById(cardId);
+  if(!card)return;
+  var topStatic=card.querySelector('.vix-card-top .text');
+  var bottomStatic=card.querySelector('.vix-card-bottom .text');
+  var topFold=card.querySelector('.vix-card-fold-top .text');
+  var bottomFold=card.querySelector('.vix-card-fold-bottom .text');
+  if(!topStatic||!bottomStatic||!topFold||!bottomFold)return;
+  var currentValue=topStatic.innerText;
+  if(currentValue===newValue)return;
+  card.classList.remove('vix-flip');
+  void card.offsetWidth;
+  topStatic.innerText=newValue;
+  topFold.innerText=currentValue;
+  bottomFold.innerText=newValue;
+  bottomStatic.innerText=currentValue;
+  card.classList.add('vix-flip');
+  setTimeout(function(){bottomStatic.innerText=newValue;},700);
+}
+function displayTimer(){
+  var minutes=Math.floor(timerSeconds/60);
+  var seconds=timerSeconds%60;
+  updateTimerCard('vixM1',String(Math.floor(minutes/10)%10));
+  updateTimerCard('vixM2',String(minutes%10));
+  updateTimerCard('vixS1',String(Math.floor(seconds/10)));
+  updateTimerCard('vixS2',String(seconds%10));
+  var clock=document.getElementById('vixFlipClock');
+  if(clock){
+    clock.classList.remove('vix-warning','vix-danger');
+    if(timerSeconds<=10)clock.classList.add('vix-danger');
+    else if(timerSeconds<=60)clock.classList.add('vix-warning');
+  }
+}
+function finishTimer(){
+  timerFrame=null;
+  timerRunning=false;
+  timerSeconds=0;
+  remainingOnPause=0;
+  displayTimer();
+  var playButton=document.getElementById('vixTimerPlayBtn');
+  if(playButton){playButton.textContent='▶';playButton.classList.remove('active');}
+  try{
+    var audioContext=new (window.AudioContext||window.webkitAudioContext)();
+    var oscillator=audioContext.createOscillator();
+    var gain=audioContext.createGain();
+    oscillator.connect(gain);
+    gain.connect(audioContext.destination);
+    oscillator.frequency.value=880;
+    gain.gain.value=.3;
+    oscillator.start();
+    gain.gain.exponentialRampToValueAtTime(.001,audioContext.currentTime+1);
+    oscillator.stop(audioContext.currentTime+1);
+  }catch(error){console.warn('Не удалось воспроизвести сигнал таймера:',error);}
+  setTimeout(function(){alert('⏱ Время вышло!');},100);
+}
+function timerTick(){
+  var now=Date.now();
+  var remaining=Math.ceil((timerEndTime-now)/1000);
+  if(remaining<=0){finishTimer();return;}
+  timerSeconds=remaining;
+  remainingOnPause=remaining;
+  displayTimer();
+  timerFrame=setTimeout(timerTick,Math.max(50,(timerEndTime-now)%1000+10));
+}
+function timerToggle(){
+  var playButton=document.getElementById('vixTimerPlayBtn');
+  if(timerRunning){
+    clearTimeout(timerFrame);
+    timerFrame=null;
+    timerRunning=false;
+    remainingOnPause=Math.max(0,Math.ceil((timerEndTime-Date.now())/1000));
+    timerSeconds=remainingOnPause;
+    if(playButton){playButton.textContent='▶';playButton.classList.remove('active');}
+    displayTimer();
+    return;
+  }
+  if(remainingOnPause<=0)remainingOnPause=600;
+  timerEndTime=Date.now()+remainingOnPause*1000;
+  timerRunning=true;
+  if(playButton){playButton.textContent='⏸';playButton.classList.add('active');}
+  timerTick();
+}
+function timerReset(){
+  clearTimeout(timerFrame);
+  timerFrame=null;
+  timerRunning=false;
+  timerSeconds=600;
+  remainingOnPause=600;
+  var playButton=document.getElementById('vixTimerPlayBtn');
+  if(playButton){playButton.textContent='▶';playButton.classList.remove('active');}
+  displayTimer();
+}
+function timerAdd(seconds){
+  if(timerRunning){
+    timerEndTime=Math.min(timerEndTime+seconds*1000,Date.now()+(99*60+59)*1000);
+    if(timerEndTime<=Date.now()){finishTimer();return;}
+    clearTimeout(timerFrame);
+    timerFrame=null;
+    timerTick();
+    return;
+  }
+  remainingOnPause=Math.max(0,Math.min(99*60+59,remainingOnPause+seconds));
+  timerSeconds=remainingOnPause;
+  displayTimer();
+}
+function timerSet(minutes){
+  clearTimeout(timerFrame);
+  timerFrame=null;
+  timerRunning=false;
+  timerSeconds=minutes*60;
+  remainingOnPause=timerSeconds;
+  var playButton=document.getElementById('vixTimerPlayBtn');
+  if(playButton){playButton.textContent='▶';playButton.classList.remove('active');}
+  displayTimer();
+}
+function adjustTime(seconds){timerAdd(seconds);}
+function startTimer(){if(!timerRunning)timerToggle();}
+function pauseTimer(){if(timerRunning)timerToggle();}
 function toggleWinnerMenu(){winnerMenuOpen=!winnerMenuOpen;document.getElementById('winnerOptions').classList.toggle('show',winnerMenuOpen);}
 
 // ===== WHEEL FUNCTIONS =====
@@ -1477,9 +1673,54 @@ function startQuickRoll(){if(parts.size===0){alert('Нет участников!
 var winTimerActive=false;
 var winnerHistory=JSON.parse(localStorage.getItem('viix999_winner_history')||'{}');
 var userMessages={};
+var dailyChatArchiveKey='';
+var dailyChatArchive=[];
 var userEntryMatches={};
 var rerollCount=0;
 var winnerResultSaved=false;
+
+function localDateKey(date){
+  return date.getFullYear()+'-'+String(date.getMonth()+1).padStart(2,'0')+'-'+String(date.getDate()).padStart(2,'0');
+}
+
+function ensureDailyChatArchive(){
+  var key='viix999_chat_archive_'+CH.toLowerCase()+'_'+localDateKey(new Date());
+  if(key===dailyChatArchiveKey)return;
+  dailyChatArchiveKey=key;
+  try{
+    var saved=JSON.parse(localStorage.getItem(key)||'[]');
+    dailyChatArchive=Array.isArray(saved)?saved:[];
+  }catch(error){
+    dailyChatArchive=[];
+    console.warn('Не удалось загрузить архив сообщений чата за сегодня:',error);
+  }
+}
+
+function saveDailyChatArchive(){
+  ensureDailyChatArchive();
+  try{
+    localStorage.setItem(dailyChatArchiveKey,JSON.stringify(dailyChatArchive));
+  }catch(error){
+    console.warn('Не удалось сохранить архив сообщений чата за сегодня:',error);
+  }
+}
+
+function dailyMessagesForUser(name){
+  ensureDailyChatArchive();
+  var target=String(name||'').toLowerCase();
+  return dailyChatArchive.filter(function(message){
+    return String(message.user||'').toLowerCase()===target
+      ||String(message.login||'').toLowerCase()===target;
+  });
+}
+
+function renderWinnerChatHistory(name){
+  var history=document.getElementById('win-chat-history');
+  if(!history)return;
+  history.innerHTML=dailyMessagesForUser(name).map(function(message){
+    return winnerMsgHtml(message.user||name,message.time,message.text);
+  }).reverse().join('');
+}
 
 // ===== ОБЪЕДИНЁННАЯ СТАТИСТИКА: vix + welvol =====
 // welvol хранит историю массивом в 'wheelbot_winner_history':
@@ -1545,8 +1786,7 @@ function showWinner(name){
   if(si)si.value='---';
   renderWinnerHistory(name);
   document.getElementById('winner-screen').classList.add('open');
-  var hCont=document.getElementById('win-chat-history');
-  hCont.innerHTML=(userMessages[name]||[]).map(function(m){return winnerMsgHtml(name,m.time,m.text);}).reverse().join('');
+  renderWinnerChatHistory(name);
   var s=0;
   clearInterval(window.winInt);
   window.winInt=setInterval(function(){
@@ -1562,25 +1802,11 @@ function showWinner(name){
 function updateWinMsgCount(){
   var el=document.getElementById('win-msg-count');
   if(!el)return;
-  var n=0;
-  if(currentWinner){
-    var winnerName=currentWinner.toLowerCase();
-    var foundByName=false;
-    Object.keys(userMessages).forEach(function(name){
-      if(name.toLowerCase()===winnerName){
-        n+=userMessages[name].length;
-        foundByName=true;
-      }
-    });
-    if(!foundByName){
-      Object.keys(userMessages).forEach(function(name){
-        userMessages[name].forEach(function(message){
-          if(String(message.login||'').toLowerCase()===winnerName)n++;
-        });
-      });
-    }
+  var messages=currentWinner?dailyMessagesForUser(currentWinner):[];
+  el.textContent='Сообщений сегодня: '+messages.length;
+  if(currentWinner&&document.getElementById('winner-screen').classList.contains('open')){
+    renderWinnerChatHistory(currentWinner);
   }
-  el.textContent='Сообщений: '+n;
 }
 
 function winnerCooldownInfo(name){
@@ -1762,6 +1988,9 @@ function connect(){
       if(targetMsgId){
         chatMessages=chatMessages.filter(function(m){return m.id!==targetMsgId;});
         renderChatOverlay();
+        ensureDailyChatArchive();
+        dailyChatArchive=dailyChatArchive.filter(function(message){return message.id!==targetMsgId;});
+        saveDailyChatArchive();
         // Удалить также из userMessages
         Object.keys(userMessages).forEach(function(name){
           userMessages[name]=userMessages[name].filter(function(m){return m.id!==targetMsgId;});
@@ -1779,6 +2008,12 @@ function connect(){
         targetUser=targetUser.trim().toLowerCase();
         chatMessages=chatMessages.filter(function(m){return m.user.toLowerCase()!==targetUser;});
         renderChatOverlay();
+        ensureDailyChatArchive();
+        dailyChatArchive=dailyChatArchive.filter(function(message){
+          return String(message.login||message.user||'').toLowerCase()!==targetUser
+            &&String(message.user||'').toLowerCase()!==targetUser;
+        });
+        saveDailyChatArchive();
         // Удалить из userMessages
         Object.keys(userMessages).forEach(function(name){
           var remaining=userMessages[name].filter(function(message){
@@ -1806,6 +2041,17 @@ function connect(){
     var time=new Date().toLocaleTimeString();
     var msgId=tags['id']||null;
 
+    ensureDailyChatArchive();
+    dailyChatArchive.push({
+      user:user,
+      login:userLogin,
+      text:msg,
+      time:time,
+      id:msgId,
+      timestamp:Date.now()
+    });
+    saveDailyChatArchive();
+
     if(!userMessages[user])userMessages[user]=[];
     userMessages[user].push({time:time,text:msg,id:msgId,login:userLogin});
     var messageMatchesCode=msg.trim().toLowerCase()===code.toLowerCase();
@@ -1826,16 +2072,6 @@ function connect(){
         var nick=document.getElementById('win-nick');
         timerLabel.classList.add('timer-responded');
         nick.classList.add('winner-responded');
-      }
-      var winnerScreen=document.getElementById('winner-screen');
-      if(winnerScreen&&winnerScreen.classList.contains('open')){
-        var history=document.getElementById('win-chat-history');
-        if(history){
-          var newMsg=document.createElement('div');
-          newMsg.innerHTML=winnerMsgHtml(user,time,msg);
-          history.insertBefore(newMsg,history.firstChild);
-          history.scrollTop=0;
-        }
       }
       winnerResponded=true;
       if(currentSession)currentSession.endTime=Date.now();
