@@ -842,9 +842,21 @@ function refreshParticipantViews(){
   renderChatOverlay();
 }
 
+// Единый пул участников для ВСЕХ способов выбора победителя.
+// Раньше «быстрый ролл», перекрутка и рулетка брали Array.from(parts)
+// напрямую и игнорировали фильтры (FM / GLOBAL / АКТИВНЫЕ / мин. сообщений),
+// поэтому выпадали люди, которых нет в отображаемом списке участников.
+function getWinnerPool(excludeCurrent){
+  var pool=filterCandidates(Array.from(parts));
+  if(excludeCurrent&&currentWinner){
+    pool=pool.filter(function(name){return name.toLowerCase()!==currentWinner.toLowerCase();});
+  }
+  return pool;
+}
+
 function chooseWinners(){
   var n=getWinnersPick();
-  var pool=filterCandidates(Array.from(parts));
+  var pool=getWinnerPool();
   if(pool.length===0){
     alert('Нет подходящих участников под выбранные фильтры!');
     return;
@@ -1677,7 +1689,7 @@ function pauseTimer(){if(timerRunning)timerToggle();}
 function toggleWinnerMenu(){winnerMenuOpen=!winnerMenuOpen;document.getElementById('winnerOptions').classList.toggle('show',winnerMenuOpen);}
 
 // ===== WHEEL FUNCTIONS =====
-function openWheel(){wheelParticipants=Array.from(parts);if(wheelParticipants.length===0){alert('Нет участников!');return;}document.getElementById('wheelModal').classList.add('show');document.getElementById('elim-log').innerText='';currentRotation=0;setSpinMode('elimination');drawWheel(0);}
+function openWheel(){wheelParticipants=getWinnerPool();if(wheelParticipants.length===0){alert('Нет подходящих участников под выбранные фильтры!');return;}document.getElementById('wheelModal').classList.add('show');document.getElementById('elim-log').innerText='';currentRotation=0;setSpinMode('elimination');drawWheel(0);}
 function closeWheel(){document.getElementById('wheelModal').classList.remove('show');isWheelSpinning=false;}
 function setSpinMode(mode){selectedSpinMode=mode;document.getElementById('modeElim').classList.toggle('active',mode==='elimination');document.getElementById('modeNormal').classList.toggle('active',mode==='normal');document.getElementById('elim-log').innerText='';drawWheel(0);}
 function adjustDur(d){var inp=document.getElementById('durInput');inp.value=Math.max(1,Math.min(30,(parseInt(inp.value)||5)+d));}
@@ -1784,7 +1796,7 @@ function renderWheelStats(){
   }).join('');
 }
 
-function startQuickRoll(){if(parts.size===0){alert('Нет участников!');return;}var arr=Array.from(parts);showWinner(arr[Math.floor(Math.random()*arr.length)]);}
+function startQuickRoll(){var arr=getWinnerPool();if(arr.length===0){alert('Нет подходящих участников под выбранные фильтры!');return;}showWinner(arr[Math.floor(Math.random()*arr.length)]);}
 
 // WINNER SCREEN VARIABLES (from eneeergyshow mechanics)
 var winTimerActive=false;
@@ -2016,7 +2028,7 @@ function renderWinnerHistory(name){
 function reSpinToHome(){
   rerollCount++;
   saveWinnerResult(true);
-  var arr=Array.from(parts);
+  var arr=getWinnerPool(true);
   if(arr.length===0){closeWinnerScreen();return;}
   showWinner(arr[Math.floor(Math.random()*arr.length)]);
 }
